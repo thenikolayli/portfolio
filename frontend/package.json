@@ -1,0 +1,28 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "windwatch": "tailwindcss -i ./src/input.css -o ./src/output.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./src/output.css --minify && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.15.2",
+    "axios": "^1.7.9",
+    "clsx": "^2.1.1",
+    "dotenv": "^16.4.7",
+    "jwt-decode": "^4.0.0",
+    "solid-icons": "^1.1.0",
+    "solid-js": "^1.9.3",
+    "tailwindcss": "^3.4.16"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.1",
+    "vite-plugin-solid": "^2.11.0"
+  }
+}

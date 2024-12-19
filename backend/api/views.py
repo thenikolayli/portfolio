@@ -1,5 +1,7 @@
 from django.contrib.auth.models import Group, User
+from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -7,6 +9,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .serializers import UserSerializer
 from .models import UserInfo
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+DEBUG = os.getenv("DEBUG")
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -20,6 +28,16 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+@api_view(['GET'])
+def GetCSRFToken(request):
+    CSRFToken = get_token(request)
+    print(request.headers)
+    if DEBUG:
+        return Response(CSRFToken, status=status.HTTP_200_OK)
+    # else:
+    #
+
+
 @api_view(['POST'])
 def RegisterUser(request):
     userSerializer = UserSerializer(data=request.data)
@@ -30,9 +48,9 @@ def RegisterUser(request):
         userInfo = UserInfo.objects.create(User=user)
         userInfo.save()
 
-        return Response(userSerializer.data, status=201)
+        return Response(userSerializer.data, status=status.HTTP_201_CREATED)
     else:
-        return Response(userSerializer.errors, status=400)
+        return Response(userSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # @api_view(['POST'])
 # def RedeemAccessKey(request):
@@ -47,4 +65,4 @@ def Profile(request, username):
     for field in removedFields:
         userInfo.pop(field)
 
-    return Response(userInfo, status=200)
+    return Response(userInfo, status=status.HTTP_200_OK)

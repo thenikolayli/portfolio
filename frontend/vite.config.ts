@@ -6,6 +6,9 @@ dotenv.config({path: "../.env"});
 export default defineConfig({
     plugins: [solid()],
     base: process.env.DEBUG === "True" ? "/" : "/static/",
+    build: {
+        outDir: "../backend/dist",
+    },
     server: {
         port: 3000,
         proxy: {

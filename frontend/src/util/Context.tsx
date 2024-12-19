@@ -13,7 +13,7 @@ const UserDataProvider = (props: any) => {
         try {
             const response = await axios({
                 method: 'POST',
-                url: "api/token/",
+                url: "/api/token/",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -42,7 +42,7 @@ const UserDataProvider = (props: any) => {
         try {
             const response = await axios({
                 method: 'POST',
-                url: "api/register/",
+                url: "/api/register/",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -83,6 +83,23 @@ const UserDataProvider = (props: any) => {
         }
     }
 
+    const getCSRFToken = async () => {
+        try {
+            const response = await axios({
+                "method": "GET",
+                "url": "/api/csrf",
+            })
+
+            console.log(response.data)
+            // if (response.status === 200) {
+            //     let newUserData = JSON.parse(userData());
+            //     newUserData["CSRFToken"] = response.data.CSRFToken;
+            // }
+        } catch (error: any) {
+            console.log(error)
+        }
+    }
+
     let contextData = {
         userData: userData,
         login: login,
@@ -95,6 +112,8 @@ const UserDataProvider = (props: any) => {
         if (localStorage.getItem("authTokens")) {
             updateToken()
         }
+
+        getCSRFToken()
 
         setInterval(() => {
             if (localStorage.getItem("authTokens")) {

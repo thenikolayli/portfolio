@@ -10,11 +10,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import UserSerializer
 from .models import UserInfo
 
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-DEBUG = os.getenv("DEBUG")
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -30,12 +25,13 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 @api_view(['GET'])
 def GetCSRFToken(request):
-    CSRFToken = get_token(request)
-    print(request.headers)
-    if DEBUG:
-        return Response(CSRFToken, status=status.HTTP_200_OK)
-    # else:
-    #
+    response = Response({"message": "cookie added automatically"}, status=status.HTTP_200_OK)
+    response.set_cookie("csrftoken", get_token(request))
+    return response
+
+@api_view(['POST'])
+def Echo(request):
+    return Response({"message": request.data["message"]}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])

@@ -8,6 +8,7 @@ export default UserDataContext;
 
 const UserDataProvider = (props: any) => {
     const [userData, setUserData] = createSignal();
+    let csrfToken = document.cookie.split("csrftoken=")[1]
 
     const login = async (username: string, password: string) => {
         try {
@@ -16,6 +17,7 @@ const UserDataProvider = (props: any) => {
                 url: "/api/token/",
                 headers: {
                     "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken,
                 },
                 data: {
                     username: username,
@@ -45,6 +47,7 @@ const UserDataProvider = (props: any) => {
                 url: "/api/register/",
                 headers: {
                     "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken,
                 },
                 data: {
                     username: username,
@@ -65,6 +68,7 @@ const UserDataProvider = (props: any) => {
                 url: "/api/token/refresh/",
                 headers: {
                     "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken,
                 },
                 data: {
                     "refresh": JSON.parse(localStorage.getItem("authTokens")!)["refresh"]
@@ -89,12 +93,6 @@ const UserDataProvider = (props: any) => {
                 "method": "GET",
                 "url": "/api/csrf",
             })
-
-            console.log(response.data)
-            // if (response.status === 200) {
-            //     let newUserData = JSON.parse(userData());
-            //     newUserData["CSRFToken"] = response.data.CSRFToken;
-            // }
         } catch (error: any) {
             console.log(error)
         }

@@ -7,39 +7,45 @@ const UserDataContext = createContext();
 export default UserDataContext;
 
 const UserDataProvider = (props: any) => {
-    const [userData, setUserData] = createSignal();
-    let csrfToken = document.cookie.split("csrftoken=")[1]
+    // dictionary that stores user data: username, groups, etc
+    const [userData, setUserData] = createSignal(null);
 
+    // function that attempts to log in, returns the response for wrapper function on Login.tsx
     const login = async (username: string, password: string) => {
         try {
             const response = await axios({
                 method: 'POST',
-                url: "/api/token/",
+                url: "/api/login/",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRFToken": csrfToken,
                 },
                 data: {
                     username: username,
                     password: password,
                 }
             })
+
             if (response.status === 200) {
-                localStorage.setItem("authTokens", JSON.stringify(response.data))
-                setUserData(jwtDecode(response.data["access"]))
+                setUserData(response.data)
             }
-            return response.status
+
+            return response
         } catch (error: any) {
-            return error.status
+            return error
         }
     }
 
-    const logout = () => {
-        localStorage.removeItem("authTokens")
+    // function to log out, removes user data and reloads the window
+    const logout = async () => {
+        await axios({
+            method: 'GET',
+            url: "/api/logout",
+        })
         setUserData(null)
-        window.location.reload()
+        location.replace("/login")
     }
 
+    // function that registers the user, returns the response (with serializers errs) for wrapper function in Register.tsx
     const register = async (username: string, email: string, password: string) => {
         try {
             const response = await axios({
@@ -47,7 +53,6 @@ const UserDataProvider = (props: any) => {
                 url: "/api/register/",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRFToken": csrfToken,
                 },
                 data: {
                     username: username,
@@ -61,62 +66,36 @@ const UserDataProvider = (props: any) => {
         }
     }
 
-    const updateToken = async () => {
+    // function to refresh jwt token pair, logs the user out on failure (no tokens/expired)
+    const refreshToken = async () => {
         try {
             const response = await axios({
-                method: "POST",
-                url: "/api/token/refresh/",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrfToken,
-                },
-                data: {
-                    "refresh": JSON.parse(localStorage.getItem("authTokens")!)["refresh"]
-                }
+                method: "GET",
+                url: "/api/refreshtoken/",
             })
 
-            if (response.status === 200) {
-                let data = response.data
-                localStorage.setItem("authTokens", JSON.stringify(data))
-                setUserData(jwtDecode(response.data["access"]))
+            setUserData(response.data)
+        } catch (error: any) {
+            if (error.status === 401) {
+                logout()
             }
-        } catch (error: any) {
-            console.log(error)
-            console.log("logging out")
-            logout()
         }
     }
 
-    const getCSRFToken = async () => {
-        try {
-            const response = await axios({
-                "method": "GET",
-                "url": "/api/csrf",
-            })
-        } catch (error: any) {
-            console.log(error)
-        }
-    }
 
     let contextData = {
         userData: userData,
         login: login,
         logout: logout,
         register: register,
-        updateToken: updateToken
+        refreshToken: refreshToken
     }
 
     onMount(() => {
-        if (localStorage.getItem("authTokens")) {
-            updateToken()
-        }
-
-        getCSRFToken()
+        refreshToken()
 
         setInterval(() => {
-            if (localStorage.getItem("authTokens")) {
-                updateToken()
-            }
+            refreshToken()
         }, 4 * 60 * 1000)
     })
 

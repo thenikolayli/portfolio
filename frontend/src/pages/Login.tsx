@@ -4,15 +4,23 @@ import Footer from "../components/Footer.tsx";
 import Navbar from "../components/Navbar.tsx";
 import {FiLock, FiUser} from "solid-icons/fi";
 import InputField from "../components/InputField.tsx";
+import {useNavigate} from "@solidjs/router";
 
 const Login = () => {
     const [inputData, setInputData] = createSignal<{[key: string]: {[key: string]: any}}>({
         "username": {"value": "", "valid": true, "message": ""},
         "password": {"value": "", "valid": true, "message": ""}
     })
-    const {login} = useContext(UserDataContext)
+    const {login, refreshToken, userData} = useContext(UserDataContext)
+    const navigate = useNavigate();
 
-    onMount(() => document.title = "Login")
+    onMount(async () => {
+        await refreshToken()
+        if (userData() !== null) {
+            navigate("/")
+        }
+        document.title = "Login"
+    })
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()
@@ -34,12 +42,15 @@ const Login = () => {
 
         const response = await login(inputData()["username"]["value"], inputData()["password"]["value"])
 
-        if (response !== 200) {
+        if (response.status !== 200) {
             newInputData["password"]["message"] = "invalid credentials"
             newInputData["username"]["valid"] = false
             newInputData["password"]["valid"] = false
-            setInputData(newInputData)
+        } else if (response.status == 200) {
+            navigate("/")
         }
+
+        setInputData(newInputData)
     }
 
     return (

@@ -1,6 +1,5 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group, User
-from django.shortcuts import get_object_or_404
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -10,7 +9,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import UserSerializer, jwtrequired
-from .models import UserInfo
+from .models import UserInfo, AccessKey
 from django.conf import settings
 import jwt
 
@@ -54,6 +53,9 @@ def RegisterUser(request):
     userSerializer = UserSerializer(data=request.data)
 
     if userSerializer.is_valid():
+        if userSerializer.validated_data["username"] == settings.DJANGO_SUPERUSER_USERNAME:
+            userSerializer.validated_data["is_superuser"] = True
+            userSerializer.validated_data["is_staff"] = True
         user = userSerializer.save()
 
         userInfo = UserInfo.objects.create(User=user)
@@ -85,17 +87,34 @@ def LogoutUser(request):
 
     return response
 
-# @api_view(['POST'])
-# def RedeemAccessKey(request):
+
+# view that activates an access key and adds the user to the group in the access key
+@api_view(['POST'])
+@jwtrequired
+def ActivateAccessKey(request):
+    access_key = request.data.get("access_key")
+    access_token = request.COOKIES.get("jwt_access")
+    payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=["HS256"])
+    user = User.objects.get(pk=payload["user_id"])
+
+    try:
+        access_key = AccessKey.objects.get(Code=access_key)
+        group = access_key.Group
+        group.user_set.add(user)
+        access_key.delete()
+
+        return Response("access key activated successfully, check your settings to view your roles",
+                        status=status.HTTP_200_OK)
+    except AccessKey.DoesNotExist:
+        return Response("access key does not exist", status=HTTP_404_NOT_FOUND)
+
+# @api_view(['GET'])
+# def Profile(request, username):
+#     removedFields = ["password", "email"]
+#     user = get_object_or_404(User, username=username)
+#     userInfo = UserSerializer(user).data
 #
-
-@api_view(['GET'])
-def Profile(request, username):
-    removedFields = ["password", "email"]
-    user = get_object_or_404(User, username=username)
-    userInfo = UserSerializer(user).data
-
-    for field in removedFields:
-        userInfo.pop(field)
-
-    return Response(userInfo, status=status.HTTP_200_OK)
+#     for field in removedFields:
+#         userInfo.pop(field)
+#
+#     return Response(userInfo, status=status.HTTP_200_OK)

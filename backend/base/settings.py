@@ -40,6 +40,8 @@ JWT_SAMESITE = "Lax"
 JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=5)
 JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=14)
 
+DJANGO_SUPERUSER_USERNAME = os.getenv("DJANGO_SUPERUSER_USERNAME")
+
 # Application definition
 
 INSTALLED_APPS = [

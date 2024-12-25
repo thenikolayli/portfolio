@@ -7,5 +7,6 @@ urlpatterns = [
     path("refreshtoken/", views.UpdateRefreshToken),
     path("logout/", views.LogoutUser),
 
-    path("profile/<str:username>", views.Profile)
+    path("activateaccesskey/", views.ActivateAccessKey),
+    # path("profile/<str:username>", views.Profile)
 ]

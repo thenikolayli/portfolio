@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 
 # list of banned usernames that might mess with the website
-banned_usernames = ["settings", "keyclub", "about", "login", "register", "admin"]
+banned_usernames = ["settings", "keyclub", "about", "login", "register", "admin", "accesskeys"]
 
 # serializer that serializes the user, validates fields upon registering, serializes groups
 class UserSerializer(serializers.ModelSerializer):

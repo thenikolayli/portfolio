@@ -23,10 +23,13 @@ const Navbar = () => {
                     <div class="absolute flex justify-self-center inset-x-0 w-fit h-fit p-4 space-x-8 font-code text-xl">
                         <a class="hover:shadow-lg transition duration-300" href="/">Home</a>
                         <a class="hover:shadow-lg transition duration-300" href="/keyclub">Key Club</a>
-                        <div class="flex flex-col items-center">
-                            <a class="hover:shadow-lg w-fit transition duration-300" href="/more">More</a>
-                            <div class="absolute container space-y-3 p-4 bg-black/30">
-                                <a href="/accesskeys" class="text-lg font-ibm">Access Keys</a>
+                        <div class="flex flex-col items-center" onmouseout={() => setShowMenu(false)} onmouseover={() => setShowMenu(true)} >
+                            <h1 class="hover:shadow-lg w-fit transition duration-300">More</h1>
+                            <div class={clsx("absolute top-0 container w-fit space-y-3 p-4 backdrop-blur transition duration-300", {
+                                "-translate-y-full": !showMenu(),
+                                "shadow-xl": showMenu()
+                            })}>
+                                <a href="/accesskeys" class="text-lg font-code text-nowrap">Access Keys</a>
                             </div>
                         </div>
                     </div>

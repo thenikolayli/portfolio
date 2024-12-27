@@ -4,3 +4,5 @@ backend/db.sqlite3
 backend/static
 backend/dist
 frontend/src/output.css
+
+old_backend

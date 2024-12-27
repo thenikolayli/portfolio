@@ -1,11 +1,12 @@
 import {createSignal, onMount, useContext} from "solid-js";
-import UserDataContext from "../util/Context.tsx";
-import InputField from "../components/InputField.tsx";
+import {useNavigate} from "@solidjs/router";
 import {FiLock, FiMail, FiUser} from "solid-icons/fi";
-import Navbar from "../components/Navbar.tsx";
-import Footer from "../components/Footer.tsx";
 import {clsx} from "clsx";
 import axios from "axios";
+import UserDataContext from "../util/Context.tsx";
+import Navbar from "../components/Navbar.tsx";
+import Footer from "../components/Footer.tsx";
+import InputField from "../components/InputField.tsx";
 
 const Register = () => {
     const [inputData, setInputData] = createSignal<{[key: string]: {[key: string]: any}}>({
@@ -14,8 +15,16 @@ const Register = () => {
         "password": {"value": "", "valid": true, "message": ""}
     })
     const [buttonEnabled, setButtonEnabled] = createSignal(true)
+    const navigate = useNavigate();
+    const context: any = useContext(UserDataContext)
 
-    onMount(() => document.title = "Register")
+    onMount(async () => {
+        await context.refreshToken()
+        if (context.userData() !== null) {
+            navigate("/")
+        }
+        document.title = "Register"
+    })
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()

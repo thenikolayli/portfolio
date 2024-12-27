@@ -1,3 +1,5 @@
+from functools import wraps
+
 import jwt, time
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -51,22 +53,28 @@ class UserSerializer(serializers.ModelSerializer):
         newUser = User.objects.create_user(**validated_data)
         return newUser
 
-# decorator function that requires a valid jwt token (links to user and isn't expired) on a view, takes in a request
-def jwtrequired(func):
-    def wrapper(*args, **kwargs):
-        request = args[0]
-        access_token = request.COOKIES.get("jwt_access")
+# decorator function that requires a valid jwt token + valid permissions (group, links to user and isn't expired) on a view, takes in a request + group (optional)
+def jwtrequired(group=None):
+    def inner(func):
+        def wrapper(*args, **kwargs):
+            request = args[0]
+            access_token = request.COOKIES.get("jwt_access")
 
-        if access_token:
-            payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=["HS256"])
+            if access_token:
+                payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=["HS256"])
 
-            if payload:
-                try:
-                    User.objects.get(pk=payload.get("user_id"))
-                except User.DoesNotExist:
-                    return Response("unauthorized: no user found, log in", status=HTTP_401_UNAUTHORIZED)
-                if payload.get("exp") < time.time():
-                    return Response("unauthorized: expired token, log in again", status=HTTP_401_UNAUTHORIZED)
-            return func(*args, **kwargs)
-        return Response("unauthorized: log in", status=HTTP_401_UNAUTHORIZED)
-    return wrapper
+                if payload:
+                    try:
+                        user = User.objects.get(pk=payload.get("user_id"))
+                        serializer = UserSerializer(user)
+
+                        if group and not group in serializer.data["groups"]: # if a group has been provided and the user isn't in it
+                            return Response("unauthorized: inadequate permissions", status=HTTP_401_UNAUTHORIZED)
+                    except User.DoesNotExist:
+                        return Response("unauthorized: no user found, log in", status=HTTP_401_UNAUTHORIZED)
+                    if payload.get("exp") < time.time():
+                        return Response("unauthorized: expired token, log in again", status=HTTP_401_UNAUTHORIZED)
+                return func(*args, **kwargs)  # if jwt access token passed all checks, return the function
+            return Response("unauthorized: log in", status=HTTP_401_UNAUTHORIZED)  # if no token then return this
+        return wrapper
+    return inner

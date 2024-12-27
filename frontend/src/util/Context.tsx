@@ -1,5 +1,4 @@
 import {createSignal, createContext, onMount} from "solid-js";
-import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 
 const UserDataContext = createContext();
@@ -8,7 +7,7 @@ export default UserDataContext;
 
 const UserDataProvider = (props: any) => {
     // dictionary that stores user data: username, groups, etc
-    const [userData, setUserData] = createSignal(null);
+    const [userData, setUserData] = createSignal("");
 
     // function to log out, removes user data and reloads the window
     const logout = async () => {
@@ -16,7 +15,7 @@ const UserDataProvider = (props: any) => {
             method: 'GET',
             url: "/api/logout",
         })
-        setUserData(null)
+        setUserData("")
         location.replace("/login")
     }
 
@@ -28,8 +27,7 @@ const UserDataProvider = (props: any) => {
                 url: "/api/refreshtoken/",
             })
 
-            setUserData(response.data)
-            console.log(userData())
+            setUserData(JSON.stringify(response.data))
         } catch (error: any) {
             if (error.status === 401) {
                 logout()

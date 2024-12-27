@@ -44,7 +44,6 @@ def LoginUser(request):
     if user is not None:
         new_refresh_token = RefreshToken.for_user(user)
         return GetNewTokenPairResponse(new_refresh_token)
-
     return Response("Invalid credentials", status=status.HTTP_401_UNAUTHORIZED)
 
 # view that creates a new user
@@ -88,9 +87,11 @@ def LogoutUser(request):
     return response
 
 
+# @api_view(['POST'])
+
 # view that activates an access key and adds the user to the group in the access key
 @api_view(['POST'])
-@jwtrequired
+@jwtrequired("chungus")
 def ActivateAccessKey(request):
     access_key = request.data.get("access_key")
     access_token = request.COOKIES.get("jwt_access")

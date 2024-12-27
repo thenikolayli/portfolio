@@ -1,12 +1,12 @@
 import {createSignal, onMount, useContext} from "solid-js";
-import UserDataContext from "../util/Context.tsx";
-import Footer from "../components/Footer.tsx";
-import Navbar from "../components/Navbar.tsx";
-import {FiLock, FiUser} from "solid-icons/fi";
-import InputField from "../components/InputField.tsx";
 import {useNavigate} from "@solidjs/router";
+import {FiLock, FiUser} from "solid-icons/fi";
 import {clsx} from "clsx";
 import axios from "axios";
+import UserDataContext from "../util/Context.tsx";
+import Navbar from "../components/Navbar.tsx";
+import Footer from "../components/Footer.tsx";
+import InputField from "../components/InputField.tsx";
 
 const Login = () => {
     const [inputData, setInputData] = createSignal<{[key: string]: {[key: string]: any}}>({
@@ -14,12 +14,12 @@ const Login = () => {
         "password": {"value": "", "valid": true, "message": ""}
     })
     const [buttonEnabled, setButtonEnabled] = createSignal(true)
-    const {refreshToken, userData, setUserData} = useContext(UserDataContext)
+    const context: any = useContext(UserDataContext)
     const navigate = useNavigate();
 
     onMount(async () => {
-        await refreshToken()
-        if (userData() !== null) {
+        await context.refreshToken()
+        if (context.userData() !== "") {
             navigate("/")
         }
         document.title = "Login"
@@ -60,7 +60,7 @@ const Login = () => {
             })
 
             if (response.status === 200) {
-                setUserData(response.data)
+                context.setUserData(JSON.stringify(response.data))
                 navigate("/")
             }
         } catch (error: any) {

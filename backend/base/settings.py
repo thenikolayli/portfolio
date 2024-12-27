@@ -29,7 +29,7 @@ load_dotenv(dotenv_path=Path(BASE_DIR.parent / ".env"))
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG") == "True" # this is for being able to change debug depending on dev or prod environment
+DEBUG = os.getenv("VITE_DEBUG") == "True" # this is for being able to change debug depending on dev or prod environment
 
 ALLOWED_HOSTS = json.loads(os.getenv("ALLOWED_HOSTS"))
 CORS_AllOWED_ORIGINS = ["http://localhost:3000"]

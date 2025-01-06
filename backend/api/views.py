@@ -1,17 +1,21 @@
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, resolve_url
+from django.conf import settings
+
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request as GoogleRequest
 
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import UserSerializer, jwtrequired
 from .models import UserInfo, AccessKey
-from django.conf import settings
-import jwt
+import jwt, json
 
 
 # function to create a response with updated user data and new jwt token pair cookies
@@ -22,14 +26,15 @@ def GetNewTokenPairResponse(new_refresh_token):
     user = User.objects.get(pk=user_id)
     user_data = UserSerializer(user).data
     user_data.pop("password")
+    new_jwt_token = {
+        "access_token": str(new_access_token),
+        "refresh_token": str(new_refresh_token),
+    }
 
     response = Response(user_data, status=status.HTTP_200_OK)
-    response.set_cookie("jwt_refresh", str(new_refresh_token), httponly=settings.JWT_HTTPONLY,
+    response.set_cookie("jwt_token", json.dumps(new_jwt_token), httponly=settings.JWT_HTTPONLY,
                         secure=settings.JWT_SECURE,
                         samesite=settings.JWT_SAMESITE, expires=settings.JWT_REFRESH_TOKEN_EXPIRES)
-    response.set_cookie("jwt_access", str(new_access_token), httponly=settings.JWT_HTTPONLY,
-                        secure=settings.JWT_SECURE,
-                        samesite=settings.JWT_SAMESITE, expires=settings.JWT_ACCESS_TOKEN_EXPIRES)
 
     return response
 
@@ -67,31 +72,70 @@ def RegisterUser(request):
 # view that returns new jwt token pair cookies with updated user data
 @api_view(['GET'])
 def UpdateRefreshToken(request):
-    refresh_token = request.COOKIES.get("jwt_refresh")
+    jwt_token = request.COOKIES.get("jwt_token")
 
-    if refresh_token:
+    if jwt_token:
+        refresh_token = json.loads(jwt_token)["refresh_token"]
         try:
             new_refresh_token = RefreshToken(refresh_token)
             return GetNewTokenPairResponse(new_refresh_token)
         except InvalidToken:
             return Response("invalid credentials", status=status.HTTP_401_UNAUTHORIZED)
-    return Response("no refresh token", status=HTTP_404_NOT_FOUND)
+    return Response("no refresh token", status=status.HTTP_404_NOT_FOUND)
 
 # view that removes the jwt token pair cookies
 @api_view(['GET'])
 def LogoutUser(request):
     response = Response(status=status.HTTP_200_OK)
-    response.delete_cookie("jwt_access")
-    response.delete_cookie("jwt_refresh")
+    response.delete_cookie("jwt_token")
+    response.delete_cookie("google_api_token")
 
     return response
 
 
-# @api_view(['POST'])
+# view that returns a redirect uri to the google consent screen
+@api_view(['POST'])
+@jwtrequired(settings.VITE_KEYCLUB_GROUP_NAME) # requires user to be logged in and be in the key club bot group
+def GoogleAuthorize(request):
+    flow = InstalledAppFlow.from_client_config(client_config=settings.GOOGLE_CLIENT_CONFIG, scopes=settings.GOOGLE_SCOPES, redirect_uri=settings.GOOGLE_REDIRECT_URI)
+    redirect_uri, state = flow.authorization_url(prompt="consent") # uri with consent screen
+    request.session["state"] = state
+
+    return Response(redirect_uri, status=status.HTTP_200_OK)
+
+# view that creates Google API credentials and saves them as a cookie and redirects the user to the Key Club Log page
+@api_view(['GET'])
+@jwtrequired(settings.VITE_KEYCLUB_GROUP_NAME)
+def GoogleOauthCallback(request):
+    code = request.GET["code"]
+    state = request.session["state"]
+    flow = InstalledAppFlow.from_client_config(client_config=settings.GOOGLE_CLIENT_CONFIG, scopes=settings.GOOGLE_SCOPES, redirect_uri=settings.GOOGLE_REDIRECT_URI, state=state)
+    token = flow.fetch_token(code=code)
+
+    # new_creds = Credentials(token=token["access_token"], refresh_token=token["refresh_token"], token_uri=settings.GOOGLE_TOKEN_URI, client_id=settings.GOOGLE_CLIENT_ID, client_secret=settings.GOOGLE_CLIENT_SECRET)
+    # new_creds.refresh(request=GoogleRequest())
+    # print(new_creds.to_json())
+
+    if settings.DEBUG: # if in debug mode, redirect to keyclub log page on solidjs local server
+        response = redirect("http://localhost:3000/keyclub/log")
+        response.set_cookie("google_api_token", token, httponly=settings.JWT_HTTPONLY, secure=settings.JWT_SECURE, samesite=settings.JWT_SAMESITE)
+        return response
+    response = redirect(resolve_url("keyclub/log")) # if in production, redirect to index.html template
+    response.set_cookie("google_api_token", token, httponly=settings.JWT_HTTPONLY, secure=settings.JWT_SECURE, samesite=settings.JWT_SAMESITE)
+    return response
+
+# view that takes in url to Key Club event signup Google Doc or Key Club meeting attendance Google Sheets and logs it
+@api_view(["POST"])
+@jwtrequired(settings.VITE_KEYCLUB_GROUP_NAME)
+def KeyClubLogEvent(request):
+
+    # check if access token is there, if so, build credentials and check if they're valid, attempt to refresh, otherwise through error
+    return Response(status=status.HTTP_200_OK)
+
 
 # view that activates an access key and adds the user to the group in the access key
 @api_view(['POST'])
-@jwtrequired("chungus")
+@jwtrequired()
 def ActivateAccessKey(request):
     access_key = request.data.get("access_key")
     access_token = request.COOKIES.get("jwt_access")
@@ -107,7 +151,7 @@ def ActivateAccessKey(request):
         return Response("access key activated successfully, check your settings to view your roles",
                         status=status.HTTP_200_OK)
     except AccessKey.DoesNotExist:
-        return Response("access key does not exist", status=HTTP_404_NOT_FOUND)
+        return Response("access key does not exist", status=status.HTTP_404_NOT_FOUND)
 
 # @api_view(['GET'])
 # def Profile(request, username):

@@ -1,4 +1,4 @@
-import {createSignal, createContext, onMount} from "solid-js";
+import {createSignal, createContext, onMount, createMemo} from "solid-js";
 import axios from "axios";
 
 const UserDataContext = createContext();
@@ -34,13 +34,22 @@ const UserDataProvider = (props: any) => {
             }
         }
     }
+    //  function that returns parsed user data, if there is any
+    const getUserData = createMemo(() => {
+        if (userData() !== "") {
+            return JSON.parse(userData())
+        } else {
+            return null
+        }
+    })
 
 
     let contextData = {
         userData: userData,
         setUserData: setUserData,
         logout: logout,
-        refreshToken: refreshToken
+        refreshToken: refreshToken,
+        getUserData: getUserData
     }
 
     onMount(() => {

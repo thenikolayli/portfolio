@@ -1,6 +1,4 @@
-from functools import wraps
-
-import jwt, time
+import jwt, time, json
 from django.contrib.auth.models import User
 from django.conf import settings
 from rest_framework import serializers
@@ -58,9 +56,10 @@ def jwtrequired(group=None):
     def inner(func):
         def wrapper(*args, **kwargs):
             request = args[0]
-            access_token = request.COOKIES.get("jwt_access")
+            jwt_token = request.COOKIES.get("jwt_token")
 
-            if access_token:
+            if jwt_token:
+                access_token = json.loads(jwt_token)["access_token"]
                 payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=["HS256"])
 
                 if payload:

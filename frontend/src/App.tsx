@@ -6,6 +6,7 @@ import Register from "./pages/Register.tsx";
 import AccessKeys from "./pages/AccessKeys.tsx";
 import KeyClub from "./pages/KeyClub.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import KeyClubLogging from "./pages/KeyClubLogging.tsx";
 
 const App = ()=> (
     <UserDataProvider>
@@ -15,6 +16,7 @@ const App = ()=> (
             <Route path="/register" component={Register}/>
             <Route path="/accesskeys" component={AccessKeys}/>
             <Route path="/keyclub" component={KeyClub}/>
+            <Route path="/keyclub/log" component={KeyClubLogging}/>
             <Route path="*" component={NotFound}/>
         </Router>
     </UserDataProvider>

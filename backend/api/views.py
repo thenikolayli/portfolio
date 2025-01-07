@@ -15,8 +15,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import UserSerializer, jwtrequired
 from .models import UserInfo, AccessKey
+from .util import keyclublogging
 import jwt, json
 
+# pop_list = ["token", "client_id", "client_secret", "universe_domain", "account"]
 
 # function to create a response with updated user data and new jwt token pair cookies
 def GetNewTokenPairResponse(new_refresh_token):
@@ -110,11 +112,7 @@ def GoogleOauthCallback(request):
     code = request.GET["code"]
     state = request.session["state"]
     flow = InstalledAppFlow.from_client_config(client_config=settings.GOOGLE_CLIENT_CONFIG, scopes=settings.GOOGLE_SCOPES, redirect_uri=settings.GOOGLE_REDIRECT_URI, state=state)
-    token = flow.fetch_token(code=code)
-
-    # new_creds = Credentials(token=token["access_token"], refresh_token=token["refresh_token"], token_uri=settings.GOOGLE_TOKEN_URI, client_id=settings.GOOGLE_CLIENT_ID, client_secret=settings.GOOGLE_CLIENT_SECRET)
-    # new_creds.refresh(request=GoogleRequest())
-    # print(new_creds.to_json())
+    token = json.dumps(flow.fetch_token(code=code))
 
     if settings.DEBUG: # if in debug mode, redirect to keyclub log page on solidjs local server
         response = redirect("http://localhost:3000/keyclub/log")
@@ -128,9 +126,25 @@ def GoogleOauthCallback(request):
 @api_view(["POST"])
 @jwtrequired(settings.VITE_KEYCLUB_GROUP_NAME)
 def KeyClubLogEvent(request):
-
+    google_api_token = request.COOKIES.get("google_api_token")
+    response = Response()
     # check if access token is there, if so, build credentials and check if they're valid, attempt to refresh, otherwise through error
-    return Response(status=status.HTTP_200_OK)
+    if google_api_token:
+        google_api_token = json.loads(google_api_token)
+        credentials = Credentials(token=google_api_token["access_token"], refresh_token=google_api_token["refresh_token"], token_uri=settings.GOOGLE_TOKEN_URI, client_id=settings.GOOGLE_CLIENT_ID, client_secret=settings.GOOGLE_CLIENT_SECRET)
+
+        # token validity check and refresh
+        if not credentials.valid: # if credentials exist but are invalid
+            if credentials.expired and credentials.refresh_token: # if they're expired but have a refresh token, refresh them
+                credentials.refresh(GoogleRequest())  # refreshes
+                new_token = json.dumps({"access_token": credentials.token, # creates a new token with the new info
+                                        "refresh_token": credentials.refresh_token,
+                                        "scope": google_api_token["scope"]
+                                        })
+                response.set_cookie("google_api_token", new_token, httponly=settings.JWT_HTTPONLY, secure=settings.JWT_SECURE, samesite=settings.JWT_SAMESITE) # updated google_api_token cookie
+
+        # send data off to the keyclublogging api
+    return Response("please log in with google", status=status.HTTP_401_UNAUTHORIZED) # if no token respond with this
 
 
 # view that activates an access key and adds the user to the group in the access key
@@ -138,7 +152,8 @@ def KeyClubLogEvent(request):
 @jwtrequired()
 def ActivateAccessKey(request):
     access_key = request.data.get("access_key")
-    access_token = request.COOKIES.get("jwt_access")
+    token = request.COOKIES.get("jwt_token")
+    access_token = json.loads(token)["access_token"]
     payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=["HS256"])
     user = User.objects.get(pk=payload["user_id"])
 

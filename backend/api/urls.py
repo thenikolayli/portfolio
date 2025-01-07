@@ -9,6 +9,7 @@ urlpatterns = [
 
     path("googleauthorize/", views.GoogleAuthorize),
     path("oauthcallback/", views.GoogleOauthCallback),
+    path("logevent/", views.KeyClubLogEvent),
 
     path("activateaccesskey/", views.ActivateAccessKey),
     # path("profile/<str:username>", views.Profile)

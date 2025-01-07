@@ -13,6 +13,7 @@ const KeyClubLogging = () => {
     const groupName = import.meta.env.VITE_KEYCLUB_GROUP_NAME
 
     const [logType, setLogType] = createSignal("event")
+
     const [link, setLink] = createSignal("")
     const [hoursMultiplier, setHoursMultiplier] = createSignal("")
     const [meetingName, setMeetingName] = createSignal("")
@@ -31,9 +32,28 @@ const KeyClubLogging = () => {
         }
     }
 
-    // const logEvent = async () => {
-    //
-    // }
+    const logEvent = async (event: any) => {
+        event.preventDefault()
+        try {
+            const response = await axios({
+                method: "POST",
+                url: "/api/logevent/",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                data: {
+                    link: link(),
+                    hours_multiplier: hoursMultiplier(),
+                    meeting_name: meetingName(),
+                    meeting_length: meetingLength(),
+                    first_name_col: firstNameCol(),
+                    last_name_col: lastNameCol(),
+                }
+            })
+        } catch (error: any) {
+            logEvent(error)
+        }
+    }
 
     return (
         <div class="flex flex-col min-h-[120vh] w-full bg-bg_gray">
@@ -84,12 +104,12 @@ const KeyClubLogging = () => {
                                                     class="flex mt-4 text-xl w-fit p-1 border-primary border-2  items-center gap-2 hover:shadow-lg transition duration-300">
                                                 <BsGoogle/>Log in with Google
                                             </button>
-                                            <form
+                                            <form onsubmit={logEvent}
                                                 class="w-[90%] mt-4 gap-y-2 flex flex-col justify-center items-center">
                                                 <div
                                                     class="flex items-center w-full gap-x-2 border-b-2 border-gray-300 hover:border-gray-400 focus-within:border-gray-400 transition duration-300">
                                                     <label for="event_link"><FiLink/></label>
-                                                    <input type="url" id="event_link" value={link()} oninput={(e) => setLink(e.target.value)}
+                                                    <input type="text" id="event_link" value={link()} oninput={(e) => setLink(e.target.value)}
                                                            class="bg-transparent outline-none w-full"
                                                            placeholder="Paste link here"/>
                                                 </div>
@@ -124,12 +144,12 @@ const KeyClubLogging = () => {
                                                     class="flex mt-4 text-xl w-fit p-1 border-primary border-2  items-center gap-2 hover:shadow-lg transition duration-300">
                                                 <BsGoogle/>Log in with Google
                                             </button>
-                                            <form
+                                            <form onsubmit={logEvent}
                                                 class="w-[90%] mt-4 gap-y-2 flex flex-col justify-center items-center">
                                                 <div
                                                     class="flex items-center w-full gap-x-2 border-b-2 border-gray-300 hover:border-gray-400 focus-within:border-gray-400 transition duration-300">
                                                     <label for="meeting_link"><FiLink/></label>
-                                                    <input type="url" id="meeting_link" oninput={(e) => setLink(e.target.value)}
+                                                    <input type="text" id="meeting_link" oninput={(e) => setLink(e.target.value)}
                                                            class="bg-transparent outline-none w-full text-lg" value={link()}
                                                            placeholder="Paste link here"/>
                                                 </div>

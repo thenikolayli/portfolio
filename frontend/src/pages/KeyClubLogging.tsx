@@ -44,14 +44,15 @@ const KeyClubLogging = () => {
                 data: {
                     link: link(),
                     hours_multiplier: hoursMultiplier(),
-                    meeting_name: meetingName(),
-                    meeting_length: meetingLength(),
-                    first_name_col: firstNameCol(),
-                    last_name_col: lastNameCol(),
+                    // meeting_name: meetingName(),
+                    // meeting_length: meetingLength(),
+                    // first_name_col: firstNameCol(),
+                    // last_name_col: lastNameCol(),
                 }
             })
+            console.log(response)
         } catch (error: any) {
-            logEvent(error)
+            console.log(error)
         }
     }
 
@@ -104,7 +105,7 @@ const KeyClubLogging = () => {
                                                     class="flex mt-4 text-xl w-fit p-1 border-primary border-2  items-center gap-2 hover:shadow-lg transition duration-300">
                                                 <BsGoogle/>Log in with Google
                                             </button>
-                                            <form onsubmit={logEvent}
+                                            <form onsubmit={(event) => logEvent(event)}
                                                 class="w-[90%] mt-4 gap-y-2 flex flex-col justify-center items-center">
                                                 <div
                                                     class="flex items-center w-full gap-x-2 border-b-2 border-gray-300 hover:border-gray-400 focus-within:border-gray-400 transition duration-300">

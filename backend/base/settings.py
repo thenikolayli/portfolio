@@ -43,7 +43,7 @@ JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=14)
 VITE_KEYCLUB_GROUP_NAME = os.getenv("VITE_KEYCLUB_GROUP_NAME")
 
 KEYCLUB_HOURS_SPREADSHEET_ID = os.getenv("KEYCLUB_HOURS_SPREADSHEET_ID")
-KEYCLUB_HOURS_SPREADSHEET_RANGE = os.getenv("KEYCLUB_HOURS_SPREADSHEET_RANGE")
+KEYCLUB_HOURS_SPREADSHEET_RANGE = json.loads(os.getenv("KEYCLUB_HOURS_SPREADSHEET_RANGE"))
 
 GOOGLE_CLIENT_CONFIG = json.loads(os.getenv("KEYCLUB_GOOGLE_CLIENT_CONFIG"))
 GOOGLE_REDIRECT_URI = GOOGLE_CLIENT_CONFIG["web"]["redirect_uris"][0] # picks the first redirect uri
@@ -164,7 +164,7 @@ SIMPLE_JWT = {
 
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
-    "USER_ID_FIELD": "id",
+    "USER_ID_FIELD": "document_id",
     "USER_ID_CLAIM": "user_id",
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
 

@@ -252,10 +252,10 @@ def log_event(document_id, hours_multiplier, credentials):
             # saves the ranges and values to log for the volunteer, then saves them to volunteers logged
             volunteer_ranges.append(f"{column}{row + 2}:{column}{row + 2}")
             volunteer_values.append(float(event_volunteers.get(name).get("hours")) * hours_multiplier)
-            volunteer_logged.update({name: {"hours": float(event_volunteers.get(name).get("hours")) * hours_multiplier}})
+            volunteer_logged.update({name: float(event_volunteers.get(name).get("hours")) * hours_multiplier})
         except:
             # saves volunteer to not logged if they could not be logged
-            volunteer_not_logged.update({name: {"hours": float(event_volunteers.get(name).get("hours")) * hours_multiplier}})
+            volunteer_not_logged.update({name: float(event_volunteers.get(name).get("hours")) * hours_multiplier})
 
     # logs hours to hours spreadsheet
     write_sheet_result = write_sheet_data(document_id=settings.KEYCLUB_HOURS_SPREADSHEET_ID,
@@ -329,7 +329,7 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
     # accounts for columns that have two letters
     if empty_event_number > len(alphabet):
         column = alphabet[empty_event_number // len(alphabet) - (
-                empty_event_number % len(alphabet) == 0) - 1]  # find the first letter and add it
+                    empty_event_number % len(alphabet) == 0) - 1]  # find the first letter and add it
     column += alphabet[empty_event_number % len(alphabet) - 1]  # add the second letter
 
     # find ranges and values and log
@@ -337,6 +337,7 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
                                 ranges=[settings.KEYCLUB_HOURS_SPREADSHEET_RANGE[0],
                                         settings.KEYCLUB_HOURS_SPREADSHEET_RANGE[1]],
                                 credentials=credentials).get("data")
+
     nickname_rows = all_rows[1]  # nickname rows
     fullnames = all_rows[0]  # full name rows
 
@@ -366,12 +367,10 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
             # saves the ranges and values to log for the volunteer, then saves them to volunteers logged
             volunteer_ranges.append(f"{column}{row + 2}:{column}{row + 2}")
             volunteer_values.append(event_volunteers.get(name).get("hours"))
-            volunteer_logged.update(
-                {name: {"hours": event_volunteers.get(name).get("hours")}})
+            volunteer_logged.update({name: event_volunteers.get(name).get("hours")})
         except:
             # saves volunteer to not logged if they could not be logged
-            volunteer_not_logged.update(
-                {name: {"hours": event_volunteers.get(name).get("hours")}})
+            volunteer_not_logged.update({name: event_volunteers.get(name).get("hours")})
 
     # logs hours to hours spreadsheet
     write_sheet_result = write_sheet_data(document_id=settings.KEYCLUB_HOURS_SPREADSHEET_ID,
@@ -382,7 +381,7 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
         return {"error": write_sheet_result.get("error")}
 
     # returns info on event automation attempt
-    return {"data": return_data,
+    return {"data": f"{meeting_title} has been logged successfully",
             "logged": volunteer_logged,
             "not_logged": volunteer_not_logged,
             "event_title": meeting_title}

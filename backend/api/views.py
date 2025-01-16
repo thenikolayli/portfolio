@@ -23,7 +23,7 @@ import jwt, json
 def GetNewTokenPairResponse(new_refresh_token):
     new_access_token = new_refresh_token.access_token
     user_id = jwt.decode(str(new_access_token), settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
-
+    print(user_id)
     user = User.objects.get(pk=user_id)
     user_data = UserSerializer(user).data
     user_data.pop("password")
@@ -49,6 +49,7 @@ def LoginUser(request):
 
     if user is not None:
         new_refresh_token = RefreshToken.for_user(user)
+        print("got new token")
         return GetNewTokenPairResponse(new_refresh_token)
     return Response("Invalid credentials", status=status.HTTP_401_UNAUTHORIZED)
 

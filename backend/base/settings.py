@@ -19,8 +19,9 @@ import os, json
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(dotenv_path=Path(BASE_DIR.parent / ".env"))
-
+# load dot env only if env variables have not been injected by docker (only if in running container)
+if not os.getenv("VITE_DEBUG"):
+    load_dotenv(dotenv_path=Path(BASE_DIR.parent / ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/

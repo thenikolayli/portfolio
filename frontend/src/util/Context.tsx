@@ -11,12 +11,13 @@ const UserDataProvider = (props: any) => {
 
     // function to log out, removes user data and reloads the window
     const logout = async () => {
-        await axios({
+        const response = await axios({
             method: 'GET',
             url: "/api/logout",
         })
         setUserData("")
-        location.replace("/login")
+        console.log(response)
+        // location.replace("/login")
     }
 
     // function to refresh jwt token pair, logs the user out on failure (no tokens/expired)

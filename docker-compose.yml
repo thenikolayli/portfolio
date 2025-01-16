@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:latest
+    volumes: # db volume to save data for persistence
+      - postgres_data:/var/lib/postgresql/data/
+    environment: # variables for postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    env_file:
+      - .env
+    expose: # port open only within the machine
+      - 5432
+  gunicorn:
+    build:
+      context: . # use dockerfile in this directory
+      args: # passes .env file as the ENV argument
+        ENV: .env
+        VITEINDOCKER: "true"
+    volumes: # creates volume for nginx container
+      - static_files:/backend/static
+    env_file:
+      - .env
+    expose: # port open only within the machine
+      - 8000
+    depends_on: # wait for db container
+      - db
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_files:/backend/static
+    ports: # links port 80 of container to machine
+      - "80:80"
+    depends_on:
+      - gunicorn
+
+# declares volumes used
+volumes:
+  postgres_data:
+  static_files:

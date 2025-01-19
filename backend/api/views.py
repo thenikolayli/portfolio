@@ -23,7 +23,6 @@ import jwt, json
 def GetNewTokenPairResponse(new_refresh_token):
     new_access_token = new_refresh_token.access_token
     user_id = jwt.decode(str(new_access_token), settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
-    print(user_id)
     user = User.objects.get(pk=user_id)
     user_data = UserSerializer(user).data
     user_data.pop("password")
@@ -33,9 +32,12 @@ def GetNewTokenPairResponse(new_refresh_token):
     }
 
     response = Response(user_data, status=status.HTTP_200_OK)
-    response.set_cookie("jwt_token", json.dumps(new_jwt_token), httponly=settings.JWT_HTTPONLY,
-                        secure=settings.JWT_SECURE,
-                        samesite=settings.JWT_SAMESITE, expires=settings.JWT_REFRESH_TOKEN_EXPIRES)
+    response.set_cookie("jwt_token", json.dumps(new_jwt_token),
+                        httponly=settings.JWT_HTTPONLY,
+                        secure=False, #settings.JWT_SECURE,
+                        samesite=settings.JWT_SAMESITE,
+                        max_age=settings.JWT_COOKIE_MAX_AGE,
+                        path="/", domain=settings.JWT_DOMAIN)
 
     return response
 
@@ -49,7 +51,6 @@ def LoginUser(request):
 
     if user is not None:
         new_refresh_token = RefreshToken.for_user(user)
-        print("got new token")
         return GetNewTokenPairResponse(new_refresh_token)
     return Response("Invalid credentials", status=status.HTTP_401_UNAUTHORIZED)
 
@@ -88,9 +89,9 @@ def UpdateRefreshToken(request):
 # view that removes the jwt token pair cookies
 @api_view(['GET'])
 def LogoutUser(request):
-    response = Response(status=status.HTTP_200_OK)
-    response.delete_cookie("jwt_token")
-    response.delete_cookie("google_api_token")
+    response = Response("logging out", status=status.HTTP_200_OK)
+    response.delete_cookie("jwt_token", path="/", domain=settings.JWT_DOMAIN)
+    response.delete_cookie("google_api_token", path="/", domain=settings.JWT_DOMAIN)
 
     return response
 
@@ -116,10 +117,18 @@ def GoogleOauthCallback(request):
 
     if settings.DEBUG: # if in debug mode, redirect to keyclub log page on solidjs local server
         response = redirect("http://localhost:3000/keyclub/log")
-        response.set_cookie("google_api_token", token, httponly=settings.JWT_HTTPONLY, secure=settings.JWT_SECURE, samesite=settings.JWT_SAMESITE)
+        response.set_cookie("google_api_token", token,
+                            httponly=settings.JWT_HTTPONLY,
+                            secure=settings.JWT_SECURE,
+                            samesite=settings.JWT_SAMESITE,
+                            path="/", domain=settings.JWT_DOMAIN)
         return response
     response = redirect(resolve_url("keyclub/log")) # if in production, redirect to index.html template
-    response.set_cookie("google_api_token", token, httponly=settings.JWT_HTTPONLY, secure=settings.JWT_SECURE, samesite=settings.JWT_SAMESITE)
+    response.set_cookie("google_api_token", token,
+                        httponly=settings.JWT_HTTPONLY,
+                        secure=settings.JWT_SECURE,
+                        samesite=settings.JWT_SAMESITE,
+                        path="/", domain=settings.JWT_DOMAIN)
     return response
 
 # view that takes in url to Key Club event signup Google Doc or Key Club meeting attendance Google Sheets and logs it
@@ -143,7 +152,11 @@ def KeyClubLogEvent(request):
                                     "refresh_token": credentials.refresh_token,
                                     "scope": google_api_token["scope"]
                                     })
-            response.set_cookie("google_api_token", new_token, httponly=settings.JWT_HTTPONLY, secure=settings.JWT_SECURE, samesite=settings.JWT_SAMESITE) # updated google_api_token cookie
+            response.set_cookie("google_api_token", new_token,
+                                httponly=settings.JWT_HTTPONLY,
+                                secure=settings.JWT_SECURE,
+                                samesite=settings.JWT_SAMESITE,
+                                path="/", domain=settings.JWT_DOMAIN) # updated google_api_token cookie
         else:
             return Response("unable to refresh credentials, log in with google", status=status.HTTP_401_UNAUTHORIZED)
 
@@ -205,7 +218,11 @@ def KeyClubLogMeeting(request):
                                     "refresh_token": credentials.refresh_token,
                                     "scope": google_api_token["scope"]
                                     })
-            response.set_cookie("google_api_token", new_token, httponly=settings.JWT_HTTPONLY, secure=settings.JWT_SECURE, samesite=settings.JWT_SAMESITE) # updated google_api_token cookie
+            response.set_cookie("google_api_token", new_token,
+                                httponly=settings.JWT_HTTPONLY,
+                                secure=settings.JWT_SECURE,
+                                samesite=settings.JWT_SAMESITE,
+                                path="/", domain=settings.JWT_DOMAIN) # updated google_api_token cookie
         else:
             return Response("unable to refresh credentials, log in with google", status=status.HTTP_401_UNAUTHORIZED)
 

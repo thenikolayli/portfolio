@@ -59,13 +59,13 @@ const Navbar = () => {
                 <div class="absolute flex top-4 right-4 gap-x-4 w-fit h-fit font-ibm text-xl">
                     <a class="p-1 hover:shadow-lg transition duration-300"
                        href="/settings">{getUsername()}</a>
-                    <button onClick={() => setShowMenu(!showMenu())}><FiMenu class="size-8"/></button>
+                    <button type={"button"} onClick={() => setShowMenu(!showMenu())}><FiMenu class="size-8"/></button>
                 </div>
                 <div class={clsx("absolute top-0 w-screen h-screen backdrop-blur transition duration-200", {
                     "opacity-100 pointer-events-auto": showMenu(),
                     "opacity-0 pointer-events-none": !showMenu()
                 })}>
-                    <button class="absolute top-4 right-8" onClick={() => setShowMenu(!showMenu())}><FiX class="size-8"/></button>
+                    <button type={"button"} class="absolute top-4 right-8" onClick={() => setShowMenu(!showMenu())}><FiX class="size-8"/></button>
                     <div class="absolute flex top-1/4 justify-self-center inset-x-0 flex-col gap-y-4">
                         <a class="font-code p-1 text-2xl w-fit hover:shadow-lg transition duration-300"
                            href="/">Home</a>

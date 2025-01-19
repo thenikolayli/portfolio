@@ -17,7 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.shortcuts import render
 from django.urls import path, include, re_path
+from django.views.decorators.csrf import ensure_csrf_cookie
 
+# view that loads the index.html for solidjs, also sends a csrf cookie for secure requests (post, delete, etc)
+@ensure_csrf_cookie
 def index(request):
     return render(request, 'index.html')
 

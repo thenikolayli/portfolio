@@ -40,6 +40,8 @@ JWT_SECURE = not DEBUG
 JWT_SAMESITE = "Lax"
 JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=5)
 JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=14)
+JWT_COOKIE_MAX_AGE = 60 * 60 * 24 * 14 # 14 days
+JWT_DOMAIN = "localhost" if DEBUG else ".nikolayli.com"
 
 VITE_KEYCLUB_GROUP_NAME = os.getenv("VITE_KEYCLUB_GROUP_NAME")
 
@@ -165,7 +167,7 @@ SIMPLE_JWT = {
 
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
-    "USER_ID_FIELD": "document_id",
+    "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
 

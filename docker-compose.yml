@@ -29,8 +29,9 @@ services:
     build: ./nginx
     volumes:
       - static_files:/backend/static
-    ports: # links port 80 of container to machine
+    ports: # links ports 80 and 443 of container to machine
       - "80:80"
+      - "443:443"
     depends_on:
       - gunicorn
 

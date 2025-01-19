@@ -25,6 +25,6 @@ WORKDIR /backend
 # sets python path for pipenv and creates virtual environment
 RUN pipenv --python /usr/bin/python3 && pipenv install
 # creates migrations, migrates models to db, collects static to static folder (for nginx), and creates group for keyclubbot permissions
-RUN pipenv run python3 manage.py makemigrations --no-input && pipenv run python3 manage.py migrate --no-input && pipenv run python3 manage.py collectstatic --no-input && pipenv run python3 manage.py creategroup
+RUN pipenv run python3 manage.py makemigrations api --no-input && pipenv run python3 manage.py migrate --no-input && pipenv run python3 manage.py collectstatic --no-input && pipenv run python3 manage.py creategroup
 # creates a gunicorn server bind to 0.0.0.0:8000 with 3 workers
 CMD ["pipenv", "run", "gunicorn", "base.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]

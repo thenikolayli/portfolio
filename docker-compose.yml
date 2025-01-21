@@ -26,8 +26,9 @@ services:
     depends_on: # wait for db container
       - db
   nginx:
-    build: ./nginx
+    image: nginx:latest
     volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
       - static_files:/backend/static
     ports: # links ports 80 and 443 of container to machine
       - "80:80"

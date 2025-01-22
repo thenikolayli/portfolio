@@ -12,7 +12,11 @@ services:
     expose: # port open only within the machine
       - 5432
   gunicorn:
-    image: nikolayli/solid_rework:latest
+    build:
+      context: . # use dockerfile in this directory
+      args: # passes .env file as the ENV argument
+        ENV: .env
+        VITEINDOCKER: "true"
     volumes: # creates volume for nginx container
       - static_files:/backend/static
     env_file:

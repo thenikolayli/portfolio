@@ -37,8 +37,6 @@ services:
     ports: # links ports 80 and 443 of container to machine
       - "80:80"
       - "443:443"
-    depends_on:
-      - gunicorn
     profiles:
       - certonly
       - mainwebsite

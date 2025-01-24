@@ -13,7 +13,7 @@ ARG VITEINDOCKER
 ENV VITEINDOCKER = ${VITEINDOCKER}
 
 # updates and installs required packages
-RUN apt-get update -y && apt-get install pipenv npm nodejs nginx -y
+RUN apt-get update -y && apt-get install pipenv npm nodejs -y
 
 # goes into frontend to build
 WORKDIR /frontend

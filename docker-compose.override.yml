@@ -1,50 +1,10 @@
 services:
-  db:
-    image: postgres:latest
-    volumes: # db volume to save data for persistence
-      - postgres_data:/var/lib/postgresql/data/
-    environment: # variables for postgres
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    env_file:
-      - .env
-    expose: # port open only within the machine
-      - 5432
   gunicorn:
     build:
       context: . # use dockerfile in this directory
       args: # passes .env file as the ENV argument
         ENV: .env
         VITEINDOCKER: "true"
-    volumes: # creates volume for nginx container
-      - static_files:/backend/static
-    env_file:
-      - .env
-    expose: # port open only within the machine
-      - 8000
-    depends_on: # wait for db container
-      - db
   nginx:
-    image: nginx:latest
     volumes:
-      - static_files:/backend/static
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./certbot/conf:/etc/certbot
-      - ./certbot/www:/var/www/certbot
-    ports: # links ports 80 and 443 of container to machine
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - gunicorn
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/certbot
-      - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email ${CERT_EMAIL} -d ${CERT_DOMAIN} --agree-tos
-
-# declares volumes used
-volumes:
-  postgres_data:
-  static_files:
+      - ./nginx.testing.conf:/etc/nginx/nginx.conf

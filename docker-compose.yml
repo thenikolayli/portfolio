@@ -32,7 +32,7 @@ services:
     volumes:
       - static_files:/backend/static
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./certbot/conf:/etc/certbot
+      - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     ports: # links ports 80 and 443 of container to machine
       - "80:80"
@@ -40,16 +40,16 @@ services:
     depends_on:
       - gunicorn
     profiles:
-      - nocert
+      - certonly
       - mainwebsite
 #    command:  /bin/bash -c rm -f /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;
   certbot:
     image: certbot/certbot
     volumes:
-      - ./certbot/conf:/etc/certbot
+      - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     profiles:
-      - certbotonly
+      - certonly
       - mainwebsite
     command: certonly --webroot -w /var/www/certbot --force-renewal --email ${CERT_EMAIL} -d ${CERT_DOMAIN} --agree-tos
 

@@ -5,3 +5,4 @@ backend/static
 backend/dist
 backend/api/migrations
 frontend/src/output.css
+aws.pem

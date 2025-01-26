@@ -19,7 +19,8 @@ import os, json
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# load dot env only if env variables have not been injected by docker (only if in running container)
+# if debug variable is not present, then django isn't running in a container (development or build phase)
+# and needs to load the env variables from a .env file
 if not os.getenv("VITE_DEBUG"):
     load_dotenv(dotenv_path=Path(BASE_DIR.parent / ".env"))
 
@@ -30,7 +31,7 @@ if not os.getenv("VITE_DEBUG"):
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("VITE_DEBUG") == "True" # this is for being able to change debug depending on dev or prod environment
+DEBUG = os.getenv("VITE_DEBUG") == "True"
 
 ALLOWED_HOSTS = json.loads(os.getenv("ALLOWED_HOSTS"))
 CORS_AllOWED_ORIGINS = ["http://localhost:3000"]
@@ -41,7 +42,7 @@ JWT_SAMESITE = "Lax"
 JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=5)
 JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=14)
 JWT_COOKIE_MAX_AGE = 60 * 60 * 24 * 14 # 14 days
-JWT_DOMAIN = "localhost" if DEBUG else ".nikolayli.com"
+JWT_DOMAIN = os.getenv("JWT_DOMAIN")
 
 VITE_KEYCLUB_GROUP_NAME = os.getenv("VITE_KEYCLUB_GROUP_NAME")
 
@@ -109,22 +110,15 @@ WSGI_APPLICATION = 'base.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'development': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    "production": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("POSTGRES_HOST"),
-        "PORT": os.getenv("POSTGRES_PORT"),
-
+    "default": {
+        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.getenv("DB_NAME", BASE_DIR / "db.sqlite3"),
+        "USER": os.getenv("DB_USER", "user"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "password"),
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", "5432"),
     }
 }
-
-DATABASES["default"] = DATABASES["development"] if DEBUG else DATABASES["production"]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

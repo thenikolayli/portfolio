@@ -4,7 +4,7 @@ services:
       context: . # use dockerfile in this directory
       args: # passes .env file as the ENV argument
         ENV: .env
-        VITEINDOCKER: "true"
   nginx:
+    # uses test nginx config (the one without ssl)
     volumes:
       - ./nginx.testing.conf:/etc/nginx/nginx.conf

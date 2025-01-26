@@ -2,7 +2,8 @@ import {defineConfig} from 'vite'
 import solid from 'vite-plugin-solid'
 import dotenv from 'dotenv'
 
-// only load dot env if env variables have not been injected by docker (if not in a running container)
+// if debug variable is not present, then django isn't running in a container (development or build phase)
+// and needs to load the env variables from a .env file
 if (!process.env.VITE_DEBUG) {
     dotenv.config({path: "../.env"})
 }
@@ -10,7 +11,7 @@ if (!process.env.VITE_DEBUG) {
 export default defineConfig({
     plugins: [solid()],
     // if in production/running in docker, add static prefix to all files (where the static files are stored)
-    base: process.env.VITEINDOCKER? "/static/" : "/",
+    base: process.env.VITE_IN_DOCKER ? "/static/" : "/",
     build: {
         outDir: "../backend/dist",
     },

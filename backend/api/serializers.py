@@ -5,8 +5,6 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 
-# list of banned usernames that might mess with the website
-banned_usernames = ["settings", "keyclub", "about", "login", "register", "admin", "accesskeys"]
 
 # serializer that serializes the user, validates fields upon registering, serializes groups
 class UserSerializer(serializers.ModelSerializer):
@@ -21,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
     def validate_username(self, value):
         if User.objects.filter(username=value).exists():
             raise serializers.ValidationError("Username taken")
-        if value in banned_usernames:
+        if value in settings.BLACKLISTED_USERNAMES:
             raise serializers.ValidationError("Username not allowed")
         return value
 

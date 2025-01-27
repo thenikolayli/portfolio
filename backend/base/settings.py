@@ -34,7 +34,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("VITE_DEBUG") == "True"
 
 ALLOWED_HOSTS = json.loads(os.getenv("ALLOWED_HOSTS"))
-CORS_AllOWED_ORIGINS = ["http://localhost:3000"]
+CORS_AllOWED_ORIGINS = json.loads(os.getenv("CORS_ALLOWED_ORIGINS"))
+CSRF_TRUSTED_ORIGINS = json.loads(os.getenv("CSRF_TRUSTED_ORIGINS"))
 
 JWT_HTTPONLY = True
 JWT_SECURE = not DEBUG
@@ -57,6 +58,8 @@ GOOGLE_CLIENT_SECRET = GOOGLE_CLIENT_CONFIG["web"]["client_secret"]
 GOOGLE_SCOPES = json.loads(os.getenv("KEYCLUB_GOOGLE_SCOPES"))
 
 DJANGO_SUPERUSER_USERNAME = os.getenv("DJANGO_SUPERUSER_USERNAME")
+# usernames that link to specific pages (ex: keyclub, accesskeys)
+BLACKLISTED_USERNAMES = json.loads(os.getenv("BLACKLISTED_USERNAMES"))
 
 # Application definition
 

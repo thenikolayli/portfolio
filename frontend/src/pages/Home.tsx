@@ -31,9 +31,6 @@ const Home = () => {
                 <div class="overflow-hidden mt-6">
                     <h1 id="intro_text" class="text-6xl text-center">Welcome to my website</h1>
                 </div>
-                {/*<div class="overflow-hidden mt-2">*/}
-                {/*    <h1 id="intro_text2" class="text-4xl text-center">(scroll)</h1>*/}
-                {/*</div>*/}
             </div>
             <Footer/>
         </div>

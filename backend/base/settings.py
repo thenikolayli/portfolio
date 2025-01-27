@@ -36,6 +36,8 @@ DEBUG = os.getenv("VITE_DEBUG") == "True"
 ALLOWED_HOSTS = json.loads(os.getenv("ALLOWED_HOSTS"))
 CORS_AllOWED_ORIGINS = json.loads(os.getenv("CORS_ALLOWED_ORIGINS"))
 CSRF_TRUSTED_ORIGINS = json.loads(os.getenv("CSRF_TRUSTED_ORIGINS"))
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 JWT_HTTPONLY = True
 JWT_SECURE = not DEBUG
@@ -51,7 +53,8 @@ KEYCLUB_HOURS_SPREADSHEET_ID = os.getenv("KEYCLUB_HOURS_SPREADSHEET_ID")
 KEYCLUB_HOURS_SPREADSHEET_RANGE = json.loads(os.getenv("KEYCLUB_HOURS_SPREADSHEET_RANGE"))
 
 GOOGLE_CLIENT_CONFIG = json.loads(os.getenv("KEYCLUB_GOOGLE_CLIENT_CONFIG"))
-GOOGLE_REDIRECT_URI = GOOGLE_CLIENT_CONFIG["web"]["redirect_uris"][0] # picks the first redirect uri
+# picks the first uri if in debug (localhost one), otherwise second one (domain one)
+GOOGLE_REDIRECT_URI = GOOGLE_CLIENT_CONFIG["web"]["redirect_uris"][0] if DEBUG else GOOGLE_CLIENT_CONFIG["web"]["redirect_uris"][1]
 GOOGLE_TOKEN_URI = GOOGLE_CLIENT_CONFIG["web"]["token_uri"]
 GOOGLE_CLIENT_ID = GOOGLE_CLIENT_CONFIG["web"]["client_id"]
 GOOGLE_CLIENT_SECRET = GOOGLE_CLIENT_CONFIG["web"]["client_secret"]

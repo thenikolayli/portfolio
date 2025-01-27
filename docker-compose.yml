@@ -15,7 +15,7 @@ services:
       - nocert
       - wholewebsite
   gunicorn:
-    image: nikolayli/solid_rework:latest
+    image: nikolayli/solid_rework:1.0.1
     volumes: # creates volume for nginx container
       - static_files:/backend/static
     env_file:

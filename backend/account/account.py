@@ -55,7 +55,7 @@ async def logout():
         secure=bool(getenv("AUTH_COOKIE_SECURE")),
         samesite=getenv("AUTH_COOKIE_SAMESITE")
     )
-    response.delete_cookie(
+    response.delete_cookie( # deletes keyclub cookie as well
         key=getenv("AUTH_COOKIE_NAME"),
         domain=getenv("AUTH_COOKIE_DOMAIN"),
         secure=bool(getenv("AUTH_COOKIE_SECURE")),

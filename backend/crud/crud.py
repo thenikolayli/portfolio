@@ -55,7 +55,6 @@ async def update_user(values: UserPatchModel, _=Depends(require_role("admin"))):
     collection = await get_collection("users")
 
     # special cases for each field
-    str_id = values.id
     str_value = values.value # ObjectId and datetime cannot be JSON serialized
     match values.field:
         case "username":
@@ -72,7 +71,7 @@ async def update_user(values: UserPatchModel, _=Depends(require_role("admin"))):
     if result.matched_count == 0:
         return JSONResponse("no user found", status_code=status.HTTP_404_NOT_FOUND)
 
-    return JSONResponse(f"{str_id}'s {values.field} set to {str_value}", status_code=status.HTTP_200_OK)
+    return JSONResponse(f"{values.id}'s {values.field} set to {str_value}", status_code=status.HTTP_200_OK)
 
 # endpoint that deletes a user given a username
 @router.delete("/user/{id}", tags=["user"])
@@ -123,8 +122,7 @@ async def update_access_key(values: AccessKeyPatchModel, _=Depends(require_role(
     collection = await get_collection("access_keys")
 
     # special cases for each field
-    str_id = values.id  # ObjectId and datetime cannot be JSON serialized
-    str_value = values.value
+    str_value = values.value # ObjectId and datetime cannot be JSON serialized
     match values.field:
         case "key":
             values.value = values.value
@@ -136,7 +134,7 @@ async def update_access_key(values: AccessKeyPatchModel, _=Depends(require_role(
     if result.matched_count == 0:
         return JSONResponse("no access_key found", status_code=status.HTTP_404_NOT_FOUND)
 
-    return JSONResponse(f"{str_id}'s {values.field} set to {str_value}", status_code=status.HTTP_200_OK)
+    return JSONResponse(f"{values.id}'s {values.field} set to {str_value}", status_code=status.HTTP_200_OK)
 
 # endpoint that deletes a access_key given a access_keyname
 @router.delete("/access_key/{id}}", tags=["access_key"])
@@ -190,8 +188,7 @@ async def update_event_logged(values: EventLoggedPatchModel, _=Depends(require_r
     collection = await get_collection("events_logged")
 
     # special cases for each field
-    str_id = values.id  # ObjectId and datetime cannot be JSON serialized
-    str_value = values.value
+    str_value = values.value # ObjectId and datetime cannot be JSON serialized
     match values.field:
         case "timestamp":
             return JSONResponse("timestamp cannot be updated", status_code=status.HTTP_400_BAD_REQUEST)
@@ -209,7 +206,7 @@ async def update_event_logged(values: EventLoggedPatchModel, _=Depends(require_r
     if result.matched_count == 0:
         return JSONResponse("no event_logged found", status_code=status.HTTP_404_NOT_FOUND)
 
-    return JSONResponse(f"{str_id}'s {values.field} set to {str_value}", status_code=status.HTTP_200_OK)
+    return JSONResponse(f"{values.id}'s {values.field} set to {str_value}", status_code=status.HTTP_200_OK)
 
 # endpoint that deletes a event_logged given a event_loggedname
 @router.delete("/eventlogged/{id}", tags=["event_logged"])

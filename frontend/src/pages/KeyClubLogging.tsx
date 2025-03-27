@@ -1,7 +1,6 @@
 import Navbar from "../components/Navbar.tsx";
 import Footer from "../components/Footer.tsx";
 import {createEffect, createSignal, Match, onMount, Show, Switch, useContext} from "solid-js";
-import {BsGoogle} from "solid-icons/bs";
 import UserDataContext from "../util/Context.tsx";
 import axios from "axios";
 import {FiArchive, FiClock, FiLink, FiX} from "solid-icons/fi";
@@ -38,18 +37,6 @@ const KeyClubLogging = () => {
     const [first_name_col, set_first_name_col] = createSignal("")
     const [last_name_col, set_last_name_col] = createSignal("")
 
-    // function that sends a request to log in the user via google (to authorize the bot)
-    const google_log_in = async () => {
-        const response = await axios({
-            method: "post",
-            url: "/api/keyclub/google_authorize"
-        })
-
-        if (response.status === 200) {
-            location.href = response.data
-        }
-    }
-
     // function that submits the form and sends a request to log the event
     const log_event = async (event: any) => {
         event.preventDefault()
@@ -75,6 +62,7 @@ const KeyClubLogging = () => {
                     logged: response.data.logged,
                     not_logged: response.data.not_logged,
                 })
+                console.log(response.data)
             }
         } catch (error: any) {
             if (error.status === 422) {
@@ -119,6 +107,7 @@ const KeyClubLogging = () => {
                     logged: response.data.logged,
                     not_logged: response.data.not_logged,
                 })
+                console.log(response.data)
             }
         } catch (error: any) {
             if (error.status === 422) {
@@ -180,10 +169,6 @@ const KeyClubLogging = () => {
                                             </li>
                                             <li>Enter the hours multiplier for that event (default is 1)</li>
                                         </ul>
-                                        <button onclick={google_log_in}
-                                                class="flex mt-4 text-xl w-fit p-1 border-primary border-2  items-center gap-2 hover:shadow-lg transition duration-300">
-                                            <BsGoogle/>Log in with Google
-                                        </button>
                                         <form onsubmit={(event) => log_event(event)}
                                               class="w-[90%] mt-4 gap-y-2 flex flex-col justify-center items-center">
                                             <div
@@ -266,10 +251,6 @@ const KeyClubLogging = () => {
                                             <li>Enter the meeting length <span class="underline">in minutes</span>
                                             </li>
                                         </ul>
-                                        <button onclick={google_log_in}
-                                                class="flex mt-4 text-xl w-fit p-1 border-primary border-2  items-center gap-2 hover:shadow-lg transition duration-300">
-                                            <BsGoogle/>Log in with Google
-                                        </button>
                                         <form onsubmit={(event) => log_meeting(event)}
                                               class="w-[90%] mt-4 gap-y-2 flex flex-col justify-center items-center">
                                             <div

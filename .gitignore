@@ -4,3 +4,4 @@ backend/static
 frontend/node_modules
 certbot
 .idea
+key.json

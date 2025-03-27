@@ -3,8 +3,6 @@
 
 # makes python look for files in the upper directory as well
 import sys
-from datetime import datetime
-
 sys.path.append("..")
 
 from fastapi import APIRouter, status, Request, Depends

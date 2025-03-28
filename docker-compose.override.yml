@@ -1,18 +1,24 @@
-# for testing
-services:
-  # this is so the backend could connect to the db during development (it's not running in a container within the system during dev)
-  db:
-    ports:
-      - "27017:27017"
-  # build in dev instead of pulling image
-  server:
-    build: .
-  # use test (no ssl) nginx config
-  proxy:
-    volumes:
-      - ./nginx.test.conf:/etc/nginx/nginx.conf
+# TESTING
+#services:
+#  # this is so the backend could connect to the db during development (it's not running in a container within the system during dev)
+#  db:
+#    ports:
+#      - "27017:27017"
+#  # build in dev instead of pulling image
+#  server:
+#    build: .
+#  # use test (no ssl) nginx config
+#  proxy:
+#    volumes:
+#      - ./nginx.test.conf:/etc/nginx/nginx.conf
 
-# for home lab setup, uncomment to use and comment the testing one
+# CERT
+services:
+  proxy:
+    depends_on: []
+
+
+# HOME LAB
 #services:
 #  proxy:
 #    container_name: nikolayli-proxy # unique name for overhead proxy

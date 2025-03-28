@@ -8,11 +8,11 @@ services:
     profiles:
       - main
   server:
-    image: username/repository:version
-    # ties static files so they can be served by the proxy
+    image: nikolayli/solid_rework:1.0.8
     env_file: .env
     volumes:
       - static_files:/backend/static
+      - ./key.json:/key.json # key isn't saved in the image
     expose:
       - 8000
     depends_on:
@@ -34,11 +34,14 @@ services:
       - server
     profiles:
       - main
+      - cert
   certbot:
     image: certbot/certbot
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
+    depends_on:
+      - proxy
     profiles:
       - cert
     command: certonly --webroot -w /var/www/certbot --force-renewal --email ${CERT_EMAIL} -d ${CERT_DOMAIN} --agree-tos

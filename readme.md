@@ -15,3 +15,9 @@ I am self-hosting this website on a home server, I'm using nginx as the reverse 
 * Tailwindcss
 * Nginx
 * Docker
+
+### Additional Info/Guide
+The docker compose override file has multiple section, only one may be uncommented at once.
+* Testing - this is just for testing
+* Cert - allows to run the nginx container alone without depends_on
+* Home lab - for connecting with the overhead proxy

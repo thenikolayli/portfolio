@@ -15,14 +15,14 @@
 # CERT
 services:
   proxy:
-    depends_on: []
+    depends_on: !override []
 
 
 # HOME LAB
 #services:
 #  proxy:
 #    container_name: nikolayli-proxy # unique name for overhead proxy
-#    ports: [] # only overhead proxy will link ports to machine ports
+#    ports: !override [] # only overhead proxy will link ports to machine ports
 #    expose:
 #      - "80"
 #      - "443"

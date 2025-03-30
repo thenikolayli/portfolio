@@ -7,6 +7,8 @@ services:
       - 27017
     profiles:
       - main
+    networks:
+      - main
   server:
     image: nikolayli/solid_rework:1.0.8
     env_file: .env
@@ -18,6 +20,8 @@ services:
     depends_on:
       - db
     profiles:
+      - main
+    networks:
       - main
   proxy:
     image: nginx:latest
@@ -35,6 +39,8 @@ services:
     profiles:
       - main
       - cert
+    networks:
+      - main
   certbot:
     image: certbot/certbot
     volumes:
@@ -44,8 +50,14 @@ services:
       - proxy
     profiles:
       - cert
+    networks:
+      - main
     command: certonly --webroot -w /var/www/certbot --force-renewal --email ${CERT_EMAIL} -d ${CERT_DOMAIN} --agree-tos
 
 volumes:
   db_data:
   static_files:
+
+networks:
+  main:
+    driver: bridge

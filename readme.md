@@ -17,7 +17,9 @@ I am self-hosting this website on a home server, I'm using nginx as the reverse 
 * Docker
 
 ### Additional Info/Guide
-The docker compose override file has multiple section, only one may be uncommented at once.
-* Testing - this is just for testing
-* Cert - allows to run the nginx container alone without depends_on
-* Home lab - for connecting with the overhead proxy
+This website setup is different from my Auth Demo website, as it is not meant to be run independently,
+I am self-hosting this website on my home server, which is why its setup differs.
+
+The docker compose setup for this repository consists of only the database and asgi server,
+the reverse proxy and certificate stuff has been moved to the top-level proxy, as it's
+simpler to manage it that way.

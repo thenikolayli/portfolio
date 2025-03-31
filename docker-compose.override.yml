@@ -1,34 +1,9 @@
 # TESTING
-#services:
-#  # this is so the backend could connect to the db during development (it's not running in a container within the system during dev)
-#  db:
-#    ports:
-#      - "27017:27017"
-#  # build in dev instead of pulling image
-#  server:
-#    build: .
-#  # use test (no ssl) nginx config
-#  proxy:
-#    volumes:
-#      - ./nginx.test.conf:/etc/nginx/nginx.conf
-
-# CERT
 services:
-  proxy:
-    depends_on: []
-
-
-# HOME LAB
-#services:
-#  proxy:
-#    container_name: nikolayli-proxy # unique name for overhead proxy
-#    ports: [] # only overhead proxy will link ports to machine ports
-#    expose:
-#      - "80"
-#      - "443"
-#    networks: # connect to home-lab network
-#      - home-lab
-#
-#networks:
-#  home-lab:
-#    external: true
+  # this is so the backend could connect to the db during development (it's not running in a container within the system during dev)
+  db:
+    ports:
+      - "27017:27017"
+  # build in dev instead of pulling image
+  server:
+    build: .

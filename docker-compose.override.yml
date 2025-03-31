@@ -1,9 +1,0 @@
-# TESTING
-services:
-  # this is so the backend could connect to the db during development (it's not running in a container within the system during dev)
-  db:
-    ports:
-      - "27017:27017"
-  # build in dev instead of pulling image
-  server:
-    build: .

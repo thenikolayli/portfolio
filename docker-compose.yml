@@ -21,7 +21,7 @@ services:
     networks:
       - main
       - home-lab
-
+sudo
 volumes:
   db_data: # for db persistence
   nikolayli-static:

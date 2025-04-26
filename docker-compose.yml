@@ -6,7 +6,6 @@ services:
     expose:
       - 27017
     networks:
-      - main
       - home-lab
   nikolayli-server:
     image: nikolayli/solid_rework:1.0.8
@@ -19,7 +18,6 @@ services:
     depends_on:
       - db
     networks:
-      - main
       - home-lab
 
 volumes:
@@ -28,8 +26,6 @@ volumes:
     external: true
 
 networks:
-  main:
-    driver: bridge
   home-lab:
     driver: bridge
     external: true

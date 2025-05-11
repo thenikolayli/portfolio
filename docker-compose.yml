@@ -3,29 +3,20 @@ services:
     image: mongo
     volumes:
       - db_data:/data/db
-    expose:
-      - 27017
-    networks:
-      - home-lab
-  nikolayli-server:
-    image: nikolayli/solid_rework:1.0.8
+    network_mode: host
+    command: mongod --port 27017
+  server:
+    image: nikolayli/solid_rework:1.0.9
     env_file: .env
     volumes:
       - nikolayli-static:/backend/static
       - ./key.json:/key.json # key isn't saved in the image
-    expose:
-      - 8000
     depends_on:
       - db
-    networks:
-      - home-lab
+    network_mode: host
+    command: pipenv run uvicorn main:app --workers 3 --host 0.0.0.0 --port 8000
 
 volumes:
   db_data: # for db persistence
   nikolayli-static:
-    external: true
-
-networks:
-  home-lab:
-    driver: bridge
     external: true

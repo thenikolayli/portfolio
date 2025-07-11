@@ -5,10 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
 from os import getenv
-from account.account import router as account_router
-from crud.crud import router as crud_router
-from keyclub.keyclub import router as keyclub_router
-from utils import require_role
+from backend.account.account import router as account_router
+from backend.crud.crud import router as crud_router
+from backend.keyclub.keyclub import router as keyclub_router
+from backend.utils import require_role
 
 # loads env variables for the whole app
 load_dotenv()

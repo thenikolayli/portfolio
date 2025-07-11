@@ -1,10 +1,6 @@
 # endpoints for the admin panel to interact with the database
 # no models.py, as this uses models from all the other apps
 
-# makes python look for files in the upper directory as well
-import sys
-sys.path.append("..")
-
 from fastapi import APIRouter, status, Request, Depends
 from fastapi.responses import JSONResponse
 from typing import Any

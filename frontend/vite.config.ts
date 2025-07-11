@@ -6,7 +6,7 @@ export default defineConfig({
     plugins: [solid(), tailwindcss()],
     base: process.env.VITE_DOCKER ? "/static/" : "/",
     build: {
-        outDir: "../backend/static"
+        outDir: "./build"
     },
     server: {
         port: 3000,

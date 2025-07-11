@@ -1,35 +1,37 @@
 services:
-  db:
+  nikolayli_backend:
+    build: ./backend
+    expose:
+      - 8000
+    networks:
+      - local
+    env_file:
+      .env
+    volumes:
+      - ./key.json:/key.json
+    command: pipenv run uvicorn backend.main:app --port 8000 --host 0.0.0.0
+  nikolayli_frontend:
+    build: ./frontend
+    expose:
+      - 80
+    # V testing V
+    ports:
+      - 80:80
+    depends_on:
+      - nikolayli_backend
+    networks:
+      - local
+  nikolayli_mongo:
     image: mongo
     volumes:
       - db_data:/data/db
     expose:
       - 27017
     networks:
-      - main
-      - home-lab
-  nikolayli-server:
-    image: nikolayli/solid_rework:1.0.8
-    env_file: .env
-    volumes:
-      - nikolayli-static:/backend/static
-      - ./key.json:/key.json # key isn't saved in the image
-    expose:
-      - 8000
-    depends_on:
-      - db
-    networks:
-      - main
-      - home-lab
+      - local
 
 volumes:
-  db_data: # for db persistence
-  nikolayli-static:
-    external: true
+  db_data:
 
 networks:
-  main:
-    driver: bridge
-  home-lab:
-    driver: bridge
-    external: true
+  local:

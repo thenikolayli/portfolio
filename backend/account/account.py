@@ -1,9 +1,5 @@
 # app for account interactions
 
-# makes python look for files in the upper directory as well
-import sys
-sys.path.append("..")
-
 from fastapi import APIRouter, status, Request, Depends
 from fastapi.responses import JSONResponse
 from backend.account.models import UserModel, UserLogin, UserValidator, AccessKeyActivationModel

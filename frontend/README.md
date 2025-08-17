@@ -1,28 +1,38 @@
-## Usage
+# sv
 
-```bash
-$ npm install # or pnpm install or yarn install
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+
+## Creating a project
+
+If you're seeing this, you've probably already done this step. Congrats!
+
+```sh
+# create a new project in the current directory
+npx sv create
+
+# create a new project in my-app
+npx sv create my-app
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+## Developing
 
-## Available Scripts
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-In the project directory, you can run:
+```sh
+npm run dev
 
-### `npm run dev`
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
 
-Runs the app in the development mode.<br>
-Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+## Building
 
-### `npm run build`
+To create a production version of your app:
 
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
+```sh
+npm run build
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+You can preview the production build with `npm run preview`.
 
-## Deployment
-
-Learn more about deploying your application with the [documentations](https://vite.dev/guide/static-deploy.html)
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.

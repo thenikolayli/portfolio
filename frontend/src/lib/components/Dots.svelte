@@ -15,13 +15,13 @@
     let offsety = $state(0) // y offset to center dots
 
     const dot_size = 15 // size of the dots
-    const colors = ["red", "blue"] // dot colors
-    let off_canvas = [] // off canvas
+    const colors = {in: "oklch(0.7 0.09 139)", out: "oklch(0.8 0.09 139)"} // dot colors, in radius and outside radius
+    let off_canvas = {} // off canvas
 
     onMount(() => {
         resize_canvas() // resizes canvas to screen size
         ctx = canvas.getContext("2d")
-        Promise.all(colors.map((color) => create_bitmap(color))).then(() => animate()) // waits for all dot colors to be rasterized
+        Promise.all(Object.keys(colors).map((color) => create_bitmap(color))).then(() => animate()) // waits for all dot colors to be rasterized
 
         addEventListener("mousemove", (event) => {
             mx = event.clientX
@@ -55,9 +55,9 @@
                 ctx.beginPath()
 
                 if ((realx - mx) ** 2 + (realy - my) ** 2 <= mradius ** 2) { // a^2 + b^2 = c^2, measures distance from cursor
-                    ctx.drawImage(off_canvas[0], realx, realy)
+                    ctx.drawImage(off_canvas["in"], realx, realy)
                 } else {
-                    ctx.drawImage(off_canvas[1], realx, realy)
+                    ctx.drawImage(off_canvas["out"], realx, realy)
                 }
 
                 ctx.fill()
@@ -78,10 +78,10 @@
             offctx.drawImage(image, 0, 0, dot_size, dot_size)
 
             offctx.globalCompositeOperation = "source-in"
-            offctx.fillStyle = color
+            offctx.fillStyle = colors[color]
             offctx.fillRect(0, 0, off.width, off.height)
 
-            off_canvas[off_canvas.length] = off
+            off_canvas[color] = off
             resolve()
         }
     })

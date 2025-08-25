@@ -6,7 +6,7 @@
 <section class="w-full h-[500px] aspect-[1.5] bg-gradient-to-b from-bg to-bg-dark from-10% p-2 border-2 border-bg-dark border-t-highlight shadow">
 
     <div class="w-full h-[80%]">
-        <img src={src} alt="Screenshot" class="w-full max-h-full object-contain">
+        <img src={src} alt="Screenshot" class="w-full max-h-[30%] object-contain">
         <h1 class="text-3xl mt-4">{title}</h1>
         <p class="text-lg font-light text-text-muted">{description}</p>
     </div>

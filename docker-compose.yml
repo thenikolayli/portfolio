@@ -1,0 +1,21 @@
+services:
+  portfolio_frontend:
+    build: ./frontend
+    expose:
+      - 3000
+    networks:
+      - local
+    command: node build
+  portfolio_proxy:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - portfolio_frontend
+    ports:
+      - 80:80
+    networks:
+      - local
+
+networks:
+  local:

@@ -18,7 +18,7 @@
         <header class="relative container w-full h-[130px]">
             <img src="/self.webp" alt="Me!" class="h-full mr-2 float-left">
             <div class="h-full flex flex-col items-stretch justify-between">
-                <h1 class="text-5xl">Hey, I'm Nikolay.</h1>
+                <h1 class="text-4xl sm:text-5xl">Hey, I'm Nikolay.</h1>
                 <span class="flex text-xl text-text-muted items-center"><Icon class="mr-1" icon="heroicons:map-pin" />Seattle, WA</span>
             </div>
         </header>

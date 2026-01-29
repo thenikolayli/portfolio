@@ -1,16 +1,13 @@
 services:
-  portfolio_frontend:
-    image: nikolayli/portfolio_frontend:latest
-    expose:
-      - 3000
+  web:
+    build: ./frontend
+    network_mode: host
     command: node build
 
-  portfolio_proxy:
-    container_name: portfolio_proxy
+  proxy:
     image: nginx:alpine
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
-      - portfolio_frontend
-    ports:
-      - 80:80
+      - web
+    network_mode: host

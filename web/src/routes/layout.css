@@ -13,6 +13,10 @@
 	--color-LightApricot: #ffe6a7;
 }
 
+/* * {
+	outline: 1px solid black;
+} */
+
 @theme inline {
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);

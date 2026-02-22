@@ -4,18 +4,6 @@
 	import { onMount } from 'svelte';
 
 	let polaroid;
-	let wiggle;
-
-	onMount(() => {
-		wiggle = gsap.to(polaroid, {
-			rotation: 3,
-			duration: 0.3,
-			ease: 'power1.inOut',
-			yoyo: true,
-			repeat: -1,
-			paused: true
-		});
-	});
 
 	const onMouseEnter = () => {
 		gsap.to(polaroid, {
@@ -23,16 +11,23 @@
 			duration: 0.3,
 			ease: 'power1.out'
 		});
-		wiggle.play();
+		gsap.to(polaroid, {
+			rotation: Math.floor(Math.random() * 2) === 1 ? 3 : -3,
+			duration: 0.3,
+			ease: 'power1.inOut',
+			yoyo: true,
+			repeat: 3
+		});
 	};
 
 	const onMouseLeave = () => {
+		gsap.killTweensOf(polaroid);
 		gsap.to(polaroid, {
 			scale: 1,
+			rotation: 0,
 			duration: 0.3,
 			ease: 'power1.out'
 		});
-		wiggle.pause();
 	};
 </script>
 

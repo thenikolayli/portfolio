@@ -1,5 +1,6 @@
 <script>
 	import Polaroid from '$lib/components/Polaroid.svelte';
+	import PolaroidStack from '$lib/components/PolaroidStack.svelte';
 	import { onMount } from 'svelte';
 
 	let hobbyFocused = $state(1); // integer 1 <= n <= 3
@@ -37,31 +38,23 @@
 			<p class="font-[Figtree] text-2xl">I am Nikolay. I'm a student, musician, and developer.</p>
 		</div>
 
-		<div class="wrapper absolute top-4 right-0 flex w-1/2 items-center justify-center">
-			<div
-				class="-rotate-10"
-				onmouseenter={() => (hobbyFocus = 1)}
-				role="note"
-				bind:this={hobbies[0]}
-			>
-				<Polaroid photoUrl="/yutaPFP.jpg" captionUrl="/yutaPFP.jpg" disableAnimation={true} />
-			</div>
-			<div
-				class="rotate-0"
-				onmouseenter={() => (hobbyFocus = 2)}
-				role="note"
-				bind:this={hobbies[1]}
-			>
-				<Polaroid photoUrl="/yutaPFP.jpg" captionUrl="/yutaPFP.jpg" disableAnimation={true} />
-			</div>
-			<div
-				class="rotate-10"
-				onmouseenter={() => (hobbyFocus = 3)}
-				role="note"
-				bind:this={hobbies[2]}
-			>
-				<Polaroid photoUrl="/yutaPFP.jpg" captionUrl="/yutaPFP.jpg" disableAnimation={true} />
-			</div>
+		<div class="wrapper absolute top-4 right-0 h-100 w-1/2">
+			<PolaroidStack
+				polaroids={[
+					{
+						photoUrl: '/yutaPFP.jpg',
+						captionUrl: '/yutaPFP.jpg'
+					},
+					{
+						photoUrl: '/yutaPFP.jpg',
+						captionUrl: '/yutaPFP.jpg'
+					},
+					{
+						photoUrl: '/yutaPFP.jpg',
+						captionUrl: '/yutaPFP.jpg'
+					}
+				]}
+			/>
 		</div>
 	</section>
 	<section class="mx-auto h-screen w-1/2">

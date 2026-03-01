@@ -13,7 +13,7 @@
 		});
 		gsap.to(polaroid, {
 			rotation: Math.floor(Math.random() * 2) === 1 ? 3 : -3,
-			duration: 0.3,
+			duration: 0.2,
 			ease: 'power1.inOut',
 			yoyo: true,
 			repeat: 3

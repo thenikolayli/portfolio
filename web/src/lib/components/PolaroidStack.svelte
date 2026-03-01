@@ -5,7 +5,7 @@
 
 	let { polaroids } = $props();
 	let polaroidBinds = [];
-	const percentShift = 5;
+	const percentShift = 10;
 
 	onMount(() => {
 		const median = Math.floor(polaroidBinds.length / 2);
@@ -67,7 +67,7 @@
 	{#each polaroids as polaroid, index}
 		<div
 			bind:this={polaroidBinds[index]}
-			class="relative z-10 -mx-12 h-fit w-fit"
+			class="relative z-10 -mx-8 h-fit w-fit"
 			onmouseenter={() => onMouseEnter(index)}
 			onmouseleave={() => onMouseLeave(index)}
 			role="note"

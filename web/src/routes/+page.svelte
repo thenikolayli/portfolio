@@ -1,6 +1,7 @@
 <script>
 	import Polaroid from '$lib/components/Polaroid.svelte';
 	import PolaroidStack from '$lib/components/PolaroidStack.svelte';
+	import Project from '$lib/components/Project.svelte';
 	import { onMount } from 'svelte';
 
 	let hobbyFocused = $state(1); // integer 1 <= n <= 3
@@ -23,7 +24,7 @@
 		<p class="flex-1 p-4 font-[Figtree] text-2xl">
 			I'm Nikolay—a student, programmer, and musician. I create software to help others.
 			<button
-				class="m-1 inline-flex -rotate-2 items-center rounded-xl bg-highlight p-2 text-subtle shadow"
+				class="relative m-1 inline-flex -rotate-2 items-center rounded-xl bg-highlight p-2 text-subtle shadow"
 				>Check out my work
 
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
@@ -36,6 +37,8 @@
 						/></g
 					></svg
 				>
+
+				<!-- <canvas class="absolute top-0 left-0 h-full w-full bg-black"></canvas> -->
 			</button>
 		</p>
 
@@ -79,5 +82,23 @@
 			>. As the Webmaster, I maintain the club website and the Discord bot—sometimes adding new
 			commands to help our Key Clubbers.
 		</p>
+	</section>
+
+	<section class="mt-8 flex w-full items-center">
+		<hr class="w-12 rounded-l border-2 border-highlight" />
+		<h1 class="mx-2 font-[Crimson-Pro] text-5xl">Projects</h1>
+		<hr class="flex-1 rounded-r border-2 border-highlight" />
+	</section>
+
+	<section class="relative flex h-[50vh] w-full flex-col">
+		<div class="flex w-full items-center">
+			<Project
+				title="this"
+				description="that"
+				github="google.com"
+				link="google.com"
+				image="/yutaPFP.jpg"
+			/>
+		</div>
 	</section>
 </section>

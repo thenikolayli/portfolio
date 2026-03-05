@@ -9,12 +9,12 @@
 		gsap.to(polaroid, {
 			scale: 1.05,
 			duration: 0.3,
-			ease: 'power1.out'
+			ease: 'power2.out'
 		});
 		gsap.to(polaroid, {
 			rotation: Math.floor(Math.random() * 2) === 1 ? 3 : -3,
 			duration: 0.2,
-			ease: 'power1.inOut',
+			ease: 'sine.inOut',
 			yoyo: true,
 			repeat: 3
 		});
@@ -26,7 +26,7 @@
 			scale: 1,
 			rotation: 0,
 			duration: 0.3,
-			ease: 'power1.out'
+			ease: 'power2.out'
 		});
 	};
 </script>

@@ -117,6 +117,22 @@
 	--radius-4xl: calc(var(--radius) * 2.6);
 }
 
+h1 {
+	@apply text-5xl;
+}
+
+h2 {
+	@apply text-3xl;
+}
+
+h3 {
+	@apply text-2xl;
+}
+
+p {
+	@apply text-lg;
+}
+
 @layer base {
 	* {
 		@apply border-border outline-ring/50;

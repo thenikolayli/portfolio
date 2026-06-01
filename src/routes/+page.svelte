@@ -6,6 +6,8 @@
 </script>
 
 <main>
-	<!-- <Intro /> -->
+	<Intro />
 	<Timeline />
+	<Project />
+	<Contact />
 </main>

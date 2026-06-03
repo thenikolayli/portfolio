@@ -64,7 +64,8 @@
 				trigger: '#work',
 				start: 'top top',
 				end: 'center top',
-				scrub: 1
+				scrub: 1,
+				once: true
 			}
 		});
 

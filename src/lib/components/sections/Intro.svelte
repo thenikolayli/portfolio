@@ -10,7 +10,5 @@
 		High school student building software in a club context.
 	</p>
 
-	<div>
-		<Button href="#work" size="lg" variant="default">View my work</Button>
-	</div>
+	<Button href="#work" size="lg" variant="default">View my work</Button>
 </section>

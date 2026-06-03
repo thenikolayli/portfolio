@@ -4,8 +4,6 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { onMount } from 'svelte';
 	import CustomBadge from '$lib/components/ui/CustomBadge.svelte';
-	import { ScrollTrigger } from 'gsap/ScrollTrigger';
-	gsap.registerPlugin(ScrollTrigger);
 
 	let rail: HTMLElement | null = null;
 	let progress: HTMLElement | null = null;
@@ -52,6 +50,7 @@
 	};
 
 	onMount(() => {
+		gsap.registerPlugin(ScrollTrigger);
 		nodes = gsap.utils.toArray<HTMLElement>('.node');
 		resizeRails();
 		window.addEventListener('resize', resizeRails);

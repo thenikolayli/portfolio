@@ -4,6 +4,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { onMount } from 'svelte';
 	import CustomBadge from '$lib/components/ui/CustomBadge.svelte';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 	let rail: HTMLElement | null = null;
 	let progress: HTMLElement | null = null;

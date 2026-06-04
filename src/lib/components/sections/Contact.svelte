@@ -12,7 +12,7 @@
 			value: 'nikolayliwork@gmail.com',
 			href: 'mailto:nikolayliwork@gmail.com'
 		},
-		{ icon: Phone, label: 'Phone', value: '+1 (425) 215-5231', href: 'tel:+14252155231' },
+		{ icon: Phone, label: 'Phone', value: '+1 (425) 215-5257', href: 'tel:+14252155257' },
 		{
 			icon: GithubIcon,
 			label: 'GitHub',

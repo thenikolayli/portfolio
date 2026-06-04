@@ -82,8 +82,8 @@
 	<SectionHeader section="02 - timeline" title="Key Club Website" subtitle="Project Highlight" />
 
 	<div class="relative">
-		<div bind:this={rail} class="absolute top-4 left-1.5 w-0.5 bg-border"></div>
-		<div bind:this={progress} class="absolute top-4 left-1.5 w-1 origin-top bg-primary"></div>
+		<div bind:this={rail} class="absolute top-6 left-1.5 w-0.5 bg-border"></div>
+		<div bind:this={progress} class="absolute top-6 left-1.5 w-1 origin-top bg-primary"></div>
 
 		<ol class="space-y-6">
 			{#each cards as card}

@@ -6,6 +6,8 @@
 	import CustomBadge from '$lib/components/ui/CustomBadge.svelte';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+	gsap.registerPlugin(ScrollTrigger);
+
 	let rail: HTMLElement | null = null;
 	let progress: HTMLElement | null = null;
 	let nodes: HTMLElement[] = [];
@@ -52,6 +54,7 @@
 
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
+
 		nodes = gsap.utils.toArray<HTMLElement>('.node');
 		resizeRails();
 		window.addEventListener('resize', resizeRails);

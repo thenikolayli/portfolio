@@ -30,7 +30,7 @@
 	];
 </script>
 
-<section id="contact" class="flex min-h-screen flex-col justify-center gap-6 py-20">
+<section id="contact" class="flex min-h-screen flex-col gap-6 py-20">
 	<SectionHeader section="04 - contact" title="Get in touch" subtitle="with me" />
 
 	<ul class="space-y-3">
@@ -55,9 +55,7 @@
 		{/each}
 	</ul>
 
-	<p
-		class="absolute inset-x-0 bottom-4 mx-auto flex flex-col text-center font-sans text-xs text-muted-foreground"
-	>
+	<p class="mt-auto flex flex-col text-center font-sans text-xs text-muted-foreground">
 		a Nikolay Li production<br />Portfolio © 2026
 	</p>
 </section>

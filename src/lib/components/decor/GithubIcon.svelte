@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="size-7" viewBox="0 0 24 24">
+<script lang="ts">
+	import { cn } from '$lib/utils.js';
+	let { class: className = 'size-7' }: { class?: string } = $props();
+</script>
+
+<svg xmlns="http://www.w3.org/2000/svg" class={cn(className)} viewBox="0 0 24 24">
 	<g
 		fill="none"
 		stroke="currentColor"

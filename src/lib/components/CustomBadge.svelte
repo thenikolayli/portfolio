@@ -29,6 +29,18 @@
 	<Badge variant="pill" class="border-[#7289da] bg-transparent p-1 text-[#7289da]">
 		{variant}
 	</Badge>
+{:else if variant === 'Proxmox'}
+	<Badge variant="pill" class="border-primary bg-transparent p-1">
+		<img src="/svg/proxmox.svg" alt="Proxmox" class="size-full object-contain" />
+	</Badge>
+{:else if variant === 'Seafile'}
+	<Badge variant="pill" class="border-primary bg-transparent p-1">
+		<img src="/svg/seafile.webp" alt="Seafile" class="size-full object-contain" />
+	</Badge>
+{:else if variant === 'Tailscale'}
+	<Badge variant="pill" class="border-primary bg-transparent p-1">
+		<img src="/svg/tailscale.webp" alt="Tailscale" class="size-full object-contain" />
+	</Badge>
 {:else if variant === 'Google APIs'}
 	<Badge variant="pill" class="gap-0 border-[#4086f4]">
 		<span class="text-[#4086f4]">G</span>
@@ -36,7 +48,7 @@
 		<span class="text-[#fbbd00]">o</span>
 		<span class="text-[#4086f4]">g</span>
 		<span class="text-[#31aa52]">l</span>
-		<span class="text-[#eb413222 mr-1">e</span>
+		<span class="mr-1 text-[#eb4132]">e</span>
 		APIs
 	</Badge>
 {:else}

@@ -4,7 +4,8 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Accordion from '$lib/components/ui/accordion/index.js';
 	import { onMount } from 'svelte';
-	import CustomBadge from '$lib/components/ui/CustomBadge.svelte';
+	import CustomBadge from '$lib/components/CustomBadge.svelte';
+	import GithubIcon from '$lib/components/decor/GithubIcon.svelte';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 	let rail: HTMLElement | null = null;
@@ -19,7 +20,8 @@
 
 			My script used the user's Google account to read and parse attendance documents and write that information to the club spreadsheet.
 			`,
-			badges: ['Python', 'Google APIs']
+			badges: ['Python', 'Google APIs'],
+			repo: ''
 		},
 		{
 			title: 'Discord bot - July 2025',
@@ -30,7 +32,8 @@
 
 			I had to use a Google Service Account to make this possible (so users wouldn't need to log in with their own).
 			`,
-			badges: ['Go', "DiscordGo"]
+			badges: ['Go', 'DiscordGo'],
+			repo: 'https://github.com/thenikolayli/keyclubDiscordBot'
 		},
 		{
 			title: 'Go API - May 2026',
@@ -43,7 +46,8 @@
 
 			I turned the Discord bot's functionality into a Go API so the website could use it and rewrote the bot to rely on the API to prevent inconsistencies with the data between the website and the bot.
 			`,
-			badges: ['Go', "SQLite"]
+			badges: ['Go', 'SQLite'],
+			repo: 'https://github.com/thenikolayli/keyclub-api'
 		},
 		{
 			title: 'Full stack rewrite - August 2026',
@@ -56,7 +60,8 @@
 
 			Furthermore, this meant I could move everything off my home lab and onto the cloud, where Supabase is hosted on Supabase and the SvelteKit app is hosted on Vercel. That way, the next webmaster would not need to have their own home lab to keep the club website running.
 			`,
-			badges: ['SvelteKit']
+			badges: ['SvelteKit'],
+			repo: 'https://github.com/thenikolayli/keyclub-web'
 		}
 	];
 
@@ -113,6 +118,19 @@
 					<Card.Root>
 						<Card.Header>
 							<Card.Title>{card.title}</Card.Title>
+							{#if card.repo !== ''}
+								<Card.Action>
+									<a
+										href={card.repo}
+										target="_blank"
+										rel="noreferrer"
+										class="text-muted-foreground transition-colors hover:text-primary"
+										aria-label={`View ${card.title} on GitHub`}
+									>
+										<GithubIcon class="size-5" />
+									</a>
+								</Card.Action>
+							{/if}
 						</Card.Header>
 						<Card.Content>
 							<p>{card.content}</p>
@@ -120,8 +138,10 @@
 						<Card.Content>
 							<Accordion.Root type="single" onValueChange={resizeRails}>
 								<Accordion.Item value="why" class="border-0">
-									<Accordion.Trigger class="px-0 text-muted-foreground cursor-pointer">Why</Accordion.Trigger>
-									<Accordion.Content class="pt-0 text-card-foreground whitespace-pre-line"
+									<Accordion.Trigger class="cursor-pointer px-0 text-muted-foreground"
+										>Why</Accordion.Trigger
+									>
+									<Accordion.Content class="pt-0 whitespace-pre-line text-card-foreground"
 										>{card.why}</Accordion.Content
 									>
 								</Accordion.Item>

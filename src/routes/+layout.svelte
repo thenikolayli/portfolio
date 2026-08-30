@@ -7,7 +7,7 @@
 <svelte:head><link rel="icon" href="/favicon.png" /></svelte:head>
 
 <div class="circuit-bg relative min-h-screen w-full">
-	<div class="mx-auto w-full max-w-[400px] px-5">
+	<div class="mx-auto w-full max-w-100 px-5">
 		{@render children()}
 	</div>
 </div>

@@ -2,8 +2,7 @@
 	import Mail from '@lucide/svelte/icons/mail';
 	import Phone from '@lucide/svelte/icons/phone';
 	import FileText from '@lucide/svelte/icons/file-text';
-	import GithubIcon from '$lib/components/decor/GithubIcon.svelte';
-	import SectionHeader from '$lib/components/decor/SectionHeader.svelte';
+	import GithubIcon from '$lib/components/GithubIcon.svelte';
 
 	const links: { icon: any; label: string; value: string; href: string; target?: string }[] = [
 		{
@@ -31,7 +30,10 @@
 </script>
 
 <section id="contact" class="flex min-h-screen flex-col gap-6 py-20">
-	<SectionHeader section="04 - contact" title="Get in touch" subtitle="with me" />
+    <header class="font-sans">
+    	<h1 class="text-2xl font-semibold tracking-tight text-foreground">Get In Touch</h1>
+    	<p class="text-lg text-muted-foreground">With me</p>
+    </header>
 
 	<ul class="space-y-3">
 		{#each links as link (link.label)}

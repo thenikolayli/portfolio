@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { gsap } from 'gsap';
-	import SectionHeader from '$lib/components/decor/SectionHeader.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Accordion from '$lib/components/ui/accordion/index.js';
 	import { onMount } from 'svelte';
 	import CustomBadge from '$lib/components/CustomBadge.svelte';
-	import GithubIcon from '$lib/components/decor/GithubIcon.svelte';
+	import GithubIcon from '$lib/components/GithubIcon.svelte';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 	let rail: HTMLElement | null = null;
@@ -103,7 +102,10 @@
 </script>
 
 <section id="work" class="flex min-h-screen flex-col justify-center gap-6 py-16">
-	<SectionHeader section="02 - timeline" title="Key Club App" subtitle="Project Highlight" />
+    <header class="font-sans">
+    	<h1 class="text-2xl font-semibold tracking-tight text-foreground">Key Club Website</h1>
+    	<p class="text-lg text-muted-foreground">My biggest project</p>
+    </header>
 
 	<div class="relative">
 		<div bind:this={rail} class="absolute top-6 left-1.5 w-0.5 bg-border"></div>

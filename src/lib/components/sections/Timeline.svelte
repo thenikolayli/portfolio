@@ -8,7 +8,6 @@
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 	let rail: HTMLElement | null = null;
-	let progress: HTMLElement | null = null;
 	let nodes: HTMLElement[] = [];
 
 	const cards = [
@@ -78,38 +77,23 @@
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
 
-		nodes = gsap.utils.toArray<HTMLElement>('.node');
 		resizeRails();
-		window.addEventListener('resize', resizeRails);
+		const observer = new ResizeObserver(() => resizeRails());
+		observer.observe(document.body);
+		nodes = gsap.utils.toArray<HTMLElement>('.node');
 
-		gsap.set(progress, { height: 0 });
-		gsap.to(progress, {
-			height: gsap.getProperty(rail, 'height'),
-			ease: 'none',
-			scrollTrigger: {
-				trigger: '#work',
-				start: 'top top',
-				end: 'center top',
-				scrub: 1,
-				once: true
-			}
-		});
-
-		return () => {
-			window.removeEventListener('resize', resizeRails);
-		};
+		return () => observer.disconnect();
 	});
 </script>
 
 <section id="work" class="flex min-h-screen flex-col justify-center gap-6 py-16">
-    <header class="font-sans">
-    	<h1 class="text-2xl font-semibold tracking-tight text-foreground">Key Club Website</h1>
-    	<p class="text-lg text-muted-foreground">My biggest project</p>
-    </header>
+	<header class="font-sans">
+		<h1 class="text-2xl font-semibold tracking-tight text-foreground">Key Club Website</h1>
+		<p class="text-lg text-muted-foreground">My main project</p>
+	</header>
 
 	<div class="relative">
 		<div bind:this={rail} class="absolute top-6 left-1.5 w-0.5 bg-border"></div>
-		<div bind:this={progress} class="absolute top-6 left-1.5 w-1 origin-top bg-primary"></div>
 
 		<ol class="space-y-6">
 			{#each cards as card}
@@ -140,12 +124,15 @@
 						<Card.Content>
 							<Accordion.Root type="single" onValueChange={resizeRails}>
 								<Accordion.Item value="why" class="border-0">
-									<Accordion.Trigger class="cursor-pointer px-0 text-muted-foreground"
-										>Why</Accordion.Trigger
+									<Accordion.Trigger
+										onclick={resizeRails}
+										class="cursor-pointer px-0 text-muted-foreground"
 									>
-									<Accordion.Content class="pt-0 whitespace-pre-line text-card-foreground"
-										>{card.why}</Accordion.Content
-									>
+										Why
+									</Accordion.Trigger>
+									<Accordion.Content class="pt-0 whitespace-pre-line text-card-foreground">
+										{card.why}
+									</Accordion.Content>
 								</Accordion.Item>
 							</Accordion.Root>
 						</Card.Content>

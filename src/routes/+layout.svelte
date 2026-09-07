@@ -10,7 +10,7 @@
 <div class="circuit-bg relative min-h-screen w-full">
 	<div class="mx-auto w-full max-w-100 px-5">
 		<ToolTip.Provider>
-		    {@render children()}
+			{@render children()}
 		</ToolTip.Provider>
 	</div>
 </div>

@@ -1,14 +1,14 @@
 <script lang="ts">
-    import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 
-    let {trigger, content} = $props();
+	let { trigger, content, class: className = '' } = $props();
 </script>
 
 <Tooltip.Root>
-    <Tooltip.Trigger>
-        {trigger}
-    </Tooltip.Trigger>
-    <Tooltip.Content>
-        {content}
-    </Tooltip.Content>
+	<Tooltip.Trigger class={className}>
+		{trigger}
+	</Tooltip.Trigger>
+	<Tooltip.Content>
+		{content}
+	</Tooltip.Content>
 </Tooltip.Root>

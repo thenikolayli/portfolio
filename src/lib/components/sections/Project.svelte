@@ -17,14 +17,13 @@
 					class="text-orange-500"
 					trigger="NUC"
 					content="Next Unit of Computing"
-				/> running Proxmox.
-				<br />
-				<br />
-				I have an array of <TinyToolTip
+				/> running Proxmox. I have an array of <TinyToolTip
 					class="text-orange-500"
 					trigger="LXCs"
 					content="Linux Containers"
-				/> where I self-host the following:
+				/> which run the following:
+				<br />
+				<br />
 				<ul class="list-inside list-disc">
 					<li>Seadrive - Google Drive alternative</li>
 					<li>Dokploy - Vercel alternative</li>
@@ -34,7 +33,8 @@
 				<br />
 				I use Seadrive to offload large files and videos from my phone/laptop to free up storage. I set
 				up a Discord webhook to receive notifications when a build or deployment fail or when one of my
-				services go down.
+				services go down. And to keep everything secure and connected, I use Tailscale, where every LXC
+				is on my Tailnet.
 			</span>
 		</div>
 		<Card.Footer>
